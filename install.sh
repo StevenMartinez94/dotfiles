@@ -181,6 +181,27 @@ setup_ranger_catppuccin_theme() {
     fi
 }
 
+setup_kitty_catppuccin_theme() {
+    log info "Setting up Catppuccin Mocha theme for Kitty..."
+
+    local kitty_config="$HOME/.config/kitty"
+    local theme_url="https://raw.githubusercontent.com/catppuccin/kitty/main/themes/mocha.conf"
+    local theme_file="$kitty_config/mocha.conf"
+    local main_conf="$kitty_config/kitty.conf"
+
+    mkdir -p "$kitty_config"
+    curl -fsSL "$theme_url" -o "$theme_file"
+    log info "Downloaded Mocha theme for Kitty."
+
+    # Ensure main kitty.conf includes the theme
+    if ! grep -q "include mocha.conf" "$main_conf" 2>/dev/null; then
+        echo "include mocha.conf" >> "$main_conf"
+        log info "Appended theme include to kitty.conf"
+    else
+        log warn "kitty.conf already includes mocha.conf"
+    fi
+}
+
 
 # --------------------------------------
 # Main execution

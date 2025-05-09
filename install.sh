@@ -131,6 +131,37 @@ configure_bluetooth_fastconnectable() {
     fi
 }
 
+# --------------------------------------
+# Theme setup
+# --------------------------------------
+setup_waybar_catppuccin_theme() {
+    log info "Setting up Catppuccin Mocha theme for Waybar..."
+
+    local waybar_config="$HOME/.config/waybar"
+    local themes_dir="$waybar_config/themes"
+    local theme_url="https://raw.githubusercontent.com/catppuccin/waybar/main/themes/mocha.css"
+    local target_css="$themes_dir/mocha.css"
+    local symlink="$waybar_config/style.css"
+
+    mkdir -p "$themes_dir"
+
+    # Download Mocha flavor CSS
+    curl -fsSL "$theme_url" -o "$target_css"
+    log info "Downloaded Catppuccin Mocha CSS."
+
+    # Backup existing style.css if it exists and is not already the desired symlink
+    if [ -f "$symlink" ] && [ ! -L "$symlink" ]; then
+        mv "$symlink" "$symlink.backup"
+        log warn "Backed up existing style.css to style.css.backup"
+    fi
+
+    # Link mocha theme to style.css
+    ln -sf "$target_css" "$symlink"
+    log info "Linked $target_css to $symlink"
+}
+
+
+
 
 # --------------------------------------
 # Main execution
@@ -148,6 +179,7 @@ main() {
     cleanup_shell_files
     sync_time
     configure_bluetooth_fastconnectable
+    setup_waybar_catppuccin_theme
     log info "Setup complete!"
 }
 

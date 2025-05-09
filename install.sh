@@ -117,6 +117,21 @@ cleanup_shell_files() {
     fi
 }
 
+configure_bluetooth_fastconnectable() {
+    log info "Configuring Bluetooth: setting FastConnectable=true..."
+    local config="/etc/bluetooth/main.conf"
+    
+    sudo sed -i 's/^#*FastConnectable=.*/FastConnectable=true/' "$config"
+
+    if ! grep -q '^FastConnectable=' "$config"; then
+        echo "FastConnectable=true" | sudo tee -a "$config" > /dev/null
+        log info "Added FastConnectable=true to $config"
+    else
+        log info "Updated FastConnectable=true in $config"
+    fi
+}
+
+
 # --------------------------------------
 # Main execution
 # --------------------------------------
@@ -132,6 +147,7 @@ main() {
     change_default_shell
     cleanup_shell_files
     sync_time
+    configure_bluetooth_fastconnectable
     log info "Setup complete!"
 }
 

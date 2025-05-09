@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Creting basic user's filesystem
+mkdir -p Downloads Pictures/Wallpapers Pictures/Screenshots Documents Projects Videos
+
 # Installing pacman packages
 pacman -S \
 	speedtest-cli jq fastfetch unzip neovim git gcc hyprland kitty ranger wget zsh \

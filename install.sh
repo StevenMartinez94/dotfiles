@@ -100,6 +100,23 @@ sync_time() {
     sudo timedatectl set-ntp true
 }
 
+cleanup_shell_files() {
+    log info "Cleaning up bash-related and shell backup files..."
+
+    # Remove .bash* files
+    for file in "$HOME"/.bash*; do
+        [ -e "$file" ] || continue
+        rm -f "$file"
+        log info "Removed: $(basename "$file")"
+    done
+
+    # Remove .shell.pre-oh-my-zsh
+    if [ -f "$HOME/.shell.pre-oh-my-zsh" ]; then
+        rm -f "$HOME/.shell.pre-oh-my-zsh"
+        log info "Removed: .shell.pre-oh-my-zsh"
+    fi
+}
+
 # --------------------------------------
 # Main execution
 # --------------------------------------
@@ -113,6 +130,7 @@ main() {
     install_yay_packages
     install_oh_my_zsh
     change_default_shell
+    cleanup_shell_files
     sync_time
     log info "Setup complete!"
 }

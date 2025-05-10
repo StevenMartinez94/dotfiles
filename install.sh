@@ -75,7 +75,7 @@ install_yay() {
 install_yay_packages() {
     log info "Installing AUR packages with yay..."
     yay -S --needed --noconfirm \
-        gowall waybar cursor-bin wofi grpcurl google-chrome hyprpaper hyprpicker \
+        gowall waybar cursor-bin ulauncher grpcurl google-chrome hyprpaper hyprpicker \
         hyprshot hyprlock hypridle nwg-look spotify-player \
         ttf-cascadia-code-nerd ttf-font-awesome ttf-joypixels nerd-fonts-complete
 }
@@ -202,6 +202,25 @@ setup_kitty_catppuccin_theme() {
     fi
 }
 
+setup_gtk3_catppuccin_theme() {
+    log info "Installing Catppuccin Mocha GTK theme (lavender) via AUR..."
+
+    # Install AUR GTK theme variant with lavender accent
+    yay -S --needed --noconfirm catppuccin-gtk-theme-mocha
+
+    # Apply theme using settings.ini (no Gnome/gsettings)
+    local gtk_dir="$HOME/.config/gtk-3.0"
+    mkdir -p "$gtk_dir"
+    cat > "$gtk_dir/settings.ini" <<EOF
+[Settings]
+gtk-theme-name=Catppuccin-Mocha-Lavender
+gtk-icon-theme-name=Papirus-Dark
+gtk-font-name=Noto Sans 10
+EOF
+
+    log info "Configured GTK 3 theme via ~/.config/gtk-3.0/settings.ini"
+}
+
 
 # --------------------------------------
 # Main execution
@@ -220,6 +239,9 @@ main() {
     sync_time
     configure_bluetooth_fastconnectable
     setup_waybar_catppuccin_theme
+    setup_ranger_catppuccin_theme
+    setup_kitty_catppuccin_theme
+    setup_gtk3_catppuccin_theme
     log info "Setup complete!"
 }
 

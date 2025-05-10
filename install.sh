@@ -174,6 +174,10 @@ setup_ranger_dracula_theme() {
         log info "Copied default ranger configuration files."
     fi
 
+    # Create colorschemes directory if it doesn't exist
+    mkdir -p "$ranger_config/colorschemes"
+    log info "Ensured colorschemes directory exists"
+
     # Download Dracula theme file
     curl -fsSL "$theme_url" -o "$theme_dest"
     log info "Downloaded Dracula theme to $theme_dest"

@@ -239,6 +239,45 @@ setup_ulauncher_catppuccin_theme() {
     fi
 }
 
+setup_nvim_catppuccin_theme() {
+    log info "Installing Catppuccin Mocha theme for Neovim..."
+
+    local nvim_config="$HOME/.config/nvim"
+    local theme_repo="https://github.com/catppuccin/nvim.git"
+    local theme_temp="$(mktemp -d)"
+    local theme_dest="$nvim_config/pack/plugins/start/catppuccin.nvim"
+
+    mkdir -p "$nvim_config/pack/plugins/start"
+    git clone --depth=1 "$theme_repo" "$theme_temp"
+    mv "$theme_temp" "$theme_dest"
+    log info "Cloned catppuccin.nvim into $theme_dest"
+
+    # Add Catppuccin theme setup to init.lua
+    local init_file="$nvim_config/init.lua"
+    if [ ! -f "$init_file" ]; then
+        touch "$init_file"
+    fi
+
+    if ! grep -q 'catppuccin' "$init_file"; then
+        cat >> "$init_file" <<EOF
+
+-- Catppuccin Mocha (Lavender) theme setup
+vim.cmd.colorscheme "catppuccin"
+require("catppuccin").setup {
+    flavour = "mocha",
+    integrations = {
+        nvimtree = true,
+        treesitter = true,
+        telescope = true,
+    }
+}
+EOF
+        log info "Appended Catppuccin setup to init.lua"
+    else
+        log warn "init.lua already contains Catppuccin configuration"
+    fi
+}
+
 # --------------------------------------
 # Main execution
 # --------------------------------------

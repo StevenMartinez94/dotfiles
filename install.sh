@@ -160,24 +160,30 @@ setup_waybar_catppuccin_theme() {
     log info "Linked $target_css to $symlink"
 }
 
-setup_ranger_catppuccin_theme() {
-    log info "Setting up Catppuccin Mocha theme for Ranger..."
+setup_ranger_dracula_theme() {
+    log info "Setting up Dracula theme for Ranger..."
 
     local ranger_config="$HOME/.config/ranger"
-    local theme_url="https://raw.githubusercontent.com/catppuccin/ranger/main/themes/mocha.py"
-    local theme_dest="$ranger_config/colorschemes/mocha.py"
+    local theme_url="https://raw.githubusercontent.com/dracula/ranger/master/dracula.py"
+    local theme_dest="$ranger_config/colorschemes/dracula.py"
+    local rc_file="$ranger_config/rc.conf"
 
-    mkdir -p "$ranger_config/colorschemes"
+    # Ensure ranger config files are initialized
+    if [ ! -f "$rc_file" ]; then
+        ranger --copy-config=all
+        log info "Copied default ranger configuration files."
+    fi
+
+    # Download Dracula theme file
     curl -fsSL "$theme_url" -o "$theme_dest"
-    log info "Downloaded Mocha theme to $theme_dest"
+    log info "Downloaded Dracula theme to $theme_dest"
 
     # Ensure rc.conf includes the theme
-    local rc="$ranger_config/rc.conf"
-    if ! grep -q 'set colorscheme mocha' "$rc" 2>/dev/null; then
-        echo 'set colorscheme mocha' >> "$rc"
-        log info "Set mocha as ranger's colorscheme in rc.conf"
+    if ! grep -q 'set colorscheme dracula' "$rc_file" 2>/dev/null; then
+        echo 'set colorscheme dracula' >> "$rc_file"
+        log info "Set Dracula as Ranger's colorscheme in rc.conf"
     else
-        log warn "Ranger rc.conf already references mocha"
+        log warn "Ranger rc.conf already references Dracula"
     fi
 }
 

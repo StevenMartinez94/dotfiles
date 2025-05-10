@@ -227,6 +227,31 @@ EOF
     log info "Configured GTK 3 theme via ~/.config/gtk-3.0/settings.ini"
 }
 
+setup_ulauncher_catppuccin_theme() {
+    log info "Setting up Catppuccin Mocha theme for Ulauncher..."
+
+    local theme_name="catppuccin-mocha-lavender"
+    local theme_repo="https://github.com/catppuccin/ulauncher.git"
+    local theme_dir="$HOME/.config/ulauncher/user-themes/$theme_name"
+
+    mkdir -p "$HOME/.config/ulauncher/user-themes"
+
+    # Clone theme repo and copy only the needed theme
+    tmp_dir=$(mktemp -d)
+    git clone --depth=1 "$theme_repo" "$tmp_dir"
+    cp "$tmp_dir/themes/mocha/lavender.css" "$theme_dir.css"
+    rm -rf "$tmp_dir"
+    log info "Copied lavender theme to $theme_dir.css"
+
+    # Apply theme in Ulauncher config if settings exist
+    local prefs="$HOME/.config/ulauncher/settings.json"
+    if [ -f "$prefs" ]; then
+        sed -i 's/"theme_name": *"[^"]*"/"theme_name": "'"$theme_name"'"/' "$prefs" && \
+        log info "Updated Ulauncher to use $theme_name"
+    else
+        log warn "Could not find Ulauncher settings.json; set theme manually in preferences"
+    fi
+}
 
 # --------------------------------------
 # Main execution
@@ -248,6 +273,7 @@ main() {
     setup_ranger_catppuccin_theme
     setup_kitty_catppuccin_theme
     setup_gtk3_catppuccin_theme
+    setup_ulauncher_catppuccin_theme
     log info "Setup complete!"
 }
 

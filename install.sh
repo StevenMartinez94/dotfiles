@@ -199,12 +199,19 @@ setup_kitty_catppuccin_theme() {
     curl -fsSL "$theme_url" -o "$theme_file"
     log info "Downloaded Mocha theme for Kitty."
 
-    # Ensure main kitty.conf includes the theme
+    # Ensure main kitty.conf includes the theme and sets the font
     if ! grep -q "include mocha.conf" "$main_conf" 2>/dev/null; then
         echo "include mocha.conf" >> "$main_conf"
         log info "Appended theme include to kitty.conf"
     else
         log warn "kitty.conf already includes mocha.conf"
+    fi
+
+    if ! grep -qi "^font_family" "$main_conf" 2>/dev/null; then
+        echo "font_family Cascadia Code" >> "$main_conf"
+        log info "Set font to Cascadia Code in kitty.conf"
+    else
+        log warn "kitty.conf already defines a font_family"
     fi
 }
 
@@ -299,6 +306,7 @@ main() {
     setup_kitty_catppuccin_theme
     setup_gtk3_catppuccin_theme
     setup_ulauncher_catppuccin_theme
+    setup_nvim_catppuccin_theme
     log info "Setup complete!"
 }
 

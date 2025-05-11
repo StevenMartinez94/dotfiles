@@ -75,7 +75,7 @@ install_yay() {
 install_yay_packages() {
     log info "Installing AUR packages with yay..."
     yay -S --needed --noconfirm \
-        gowall waybar cursor-bin ulauncher grpcurl google-chrome hyprpaper hyprpicker \
+        gowall waybar cursor-bin rofi-lbonn-wayland-git grpcurl google-chrome hyprpaper hyprpicker \
         hyprshot hyprlock hypridle nwg-look spotify-player \
         ttf-cascadia-code-nerd ttf-font-awesome ttf-joypixels nerd-fonts-complete
 }
@@ -238,15 +238,28 @@ EOF
     log info "Configured GTK 3 theme via ~/.config/gtk-3.0/settings.ini"
 }
 
-setup_ulauncher_catppuccin_theme() {
-    log info "Setting up Catppuccin Mocha theme for Ulauncher"
+setup_rofi_catppuccin_theme() {
+    log info "Setting up Catppuccin Mocha theme for Rofi (Wayland)..."
 
-    # Run the official installation script
-    if command -v python3 >/dev/null 2>&1; then
-        python3 <(curl https://raw.githubusercontent.com/catppuccin/ulauncher/main/install.py -fsSL) --flavor mocha --accent lavender
-        log info "Catppuccin Ulauncher theme installed successfully."
+    local rofi_config="$HOME/.config/rofi"
+    local theme_dir="$rofi_config/themes"
+    local theme_url="https://raw.githubusercontent.com/catppuccin/rofi/main/themes/catppuccin-mocha.rasi"
+    local theme_file="$theme_dir/catppuccin-mocha.rasi"
+    local config_file="$rofi_config/config.rasi"
+
+    mkdir -p "$theme_dir"
+    curl -fsSL "$theme_url" -o "$theme_file"
+    log info "Downloaded Catppuccin Mocha theme for Rofi."
+
+    # Set theme in config.rasi
+    if [ ! -f "$config_file" ]; then
+        echo "@theme \"catppuccin-mocha\"" > "$config_file"
+        log info "Created config.rasi and set theme."
+    elif ! grep -q '@theme "catppuccin-mocha"' "$config_file"; then
+        echo "@theme \"catppuccin-mocha\"" >> "$config_file"
+        log info "Appended theme to config.rasi"
     else
-        log error "Python 3 is not installed. Cannot install Ulauncher theme."
+        log warn "config.rasi already sets catppuccin-mocha theme"
     fi
 }
 
@@ -309,7 +322,7 @@ main() {
     setup_ranger_catppuccin_theme
     setup_kitty_catppuccin_theme
     setup_gtk3_catppuccin_theme
-    setup_ulauncher_catppuccin_theme
+    setup_rofi_catppuccin_theme
     setup_nvim_catppuccin_theme
     log info "Setup complete!"
 }

@@ -10,6 +10,7 @@ This repository contains my system configuration, including:
 - System configuration
 - User directory structure
 - Package management (pacman and AUR)
+- Theme configurations (Catppuccin Mocha)
 
 ## Prerequisites
 
@@ -51,19 +52,35 @@ chmod +x install.sh
 - yay (AUR helper)
 - gowall
 - waybar
-- wofi
+- rofi (Wayland version)
 - Google Chrome
 - Hyprland-related tools (hyprpaper, hyprpicker, hyprshot, hyprlock, hypridle)
-- Fonts (Cascadia Code Nerd, Font Awesome, JoyPixels)
+- Fonts (Cascadia Code Nerd, Font Awesome, JoyPixels, Noto Sans)
+- Spotify Player
+- Papirus Icon Theme
+
+### Theme Configuration
+- Catppuccin Mocha theme for:
+  - Waybar
+  - Kitty terminal
+  - GTK3 (Lavender accent)
+  - Rofi
+  - Neovim
+- Dracula theme for Ranger
+- Papirus Dark icons
 
 ### Shell Configuration
 - zsh with oh-my-zsh
-- Custom shell configurations
+- zsh plugins:
+  - Syntax highlighting
+  - Autosuggestions
+  - Git integration
 
 ### Services
 - Docker
-- Bluetooth
+- Bluetooth (with fast connectable mode)
 - SSH
+- System time synchronization (NTP)
 
 ### User Directories
 Creates standard user directories:
@@ -81,3 +98,5 @@ Creates standard user directories:
 - Bluetooth fast connectable mode
 - System time synchronization
 - Clean shell configuration
+- Consistent theme across applications
+- Wayland compatibility

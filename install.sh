@@ -95,6 +95,28 @@ change_default_shell() {
     chsh -s "$(which zsh)"
 }
 
+install_zsh_plugins() {
+    log info "Installing Zsh plugins: syntax highlighting and autosuggestions..."
+
+    local custom_dir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+
+    # zsh-syntax-highlighting
+    if [ ! -d "$custom_dir/plugins/zsh-syntax-highlighting" ]; then
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$custom_dir/plugins/zsh-syntax-highlighting"
+        log info "Installed zsh-syntax-highlighting"
+    else
+        log warn "zsh-syntax-highlighting already installed"
+    fi
+
+    # zsh-autosuggestions
+    if [ ! -d "$custom_dir/plugins/zsh-autosuggestions" ]; then
+        git clone https://github.com/zsh-users/zsh-autosuggestions "$custom_dir/plugins/zsh-autosuggestions"
+        log info "Installed zsh-autosuggestions"
+    else
+        log warn "zsh-autosuggestions already installed"
+    fi
+}
+
 sync_time() {
     log info "Synchronizing system time..."
     sudo timedatectl set-ntp true
@@ -315,6 +337,7 @@ main() {
     install_yay_packages
     install_oh_my_zsh
     change_default_shell
+    install_zsh_plugins
     cleanup_shell_files
     sync_time
     configure_bluetooth_fastconnectable

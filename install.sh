@@ -319,7 +319,7 @@ main() {
     sync_time
     configure_bluetooth_fastconnectable
     setup_waybar_catppuccin_theme
-    setup_ranger_catppuccin_theme
+    setup_ranger_dracula_theme
     setup_kitty_catppuccin_theme
     setup_gtk3_catppuccin_theme
     setup_rofi_catppuccin_theme

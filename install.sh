@@ -52,7 +52,7 @@ add_user_to_docker_group() {
 
 enable_services() {
     log info "Enabling and starting services..."
-    for service in docker.service docker.socket containerd.service bluetooth.service; do
+    for service in docker.service docker.socket containerd.service bluetooth.service sddm.service; do
         sudo systemctl enable "$service"
         sudo systemctl start "$service"
         log info "Service enabled: $service"

@@ -153,6 +153,21 @@ configure_bluetooth_fastconnectable() {
     fi
 }
 
+configure_sddm_theme() {
+    log info "Configuring SDDM with Corners theme..."
+    
+    # Create SDDM config directory if it doesn't exist
+    sudo mkdir -p /etc/sddm.conf.d/
+    
+    # Create or update the theme configuration
+    cat << EOF | sudo tee /etc/sddm.conf.d/theme.conf
+[Theme]
+Current=corners
+EOF
+    
+    log info "SDDM theme configured to use Corners theme"
+}
+
 # --------------------------------------
 # Theme setup
 # --------------------------------------
@@ -341,6 +356,7 @@ main() {
     cleanup_shell_files
     sync_time
     configure_bluetooth_fastconnectable
+    configure_sddm_theme
     setup_waybar_catppuccin_theme
     setup_ranger_dracula_theme
     setup_kitty_catppuccin_theme

@@ -58,6 +58,13 @@ chmod +x install.sh
 - Fonts (Cascadia Code Nerd, Font Awesome, JoyPixels, Noto Sans)
 - Spotify Player
 - Papirus Icon Theme
+- SDDM Theme Corners (customizable login screen theme)
+
+### Display Manager
+- SDDM with Corners theme
+  - Customizable corner-based layout
+  - Modern and minimal design
+  - Configurable through theme.conf
 
 ### Theme Configuration
 - Catppuccin Mocha theme for:

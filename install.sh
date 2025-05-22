@@ -76,7 +76,7 @@ install_yay_packages() {
     log info "Installing AUR packages with yay..."
     yay -S --needed --noconfirm \
         gowall waybar cursor-bin rofi-lbonn-wayland-git grpcurl google-chrome hyprpaper hyprpicker \
-        hyprshot hyprlock hypridle nwg-look spotify-player papirus-icon-theme \
+        hyprshot hyprlock hypridle nwg-look spotify-player papirus-icon-theme paru sddm-theme-corners-git \
         ttf-cascadia-code-nerd ttf-font-awesome ttf-joypixels nerd-fonts-complete noto-fons
 }
 

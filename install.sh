@@ -168,6 +168,21 @@ EOF
     log info "SDDM theme configured to use Corners theme"
 }
 
+setup_hyprland_config() {
+    log info "Setting up hyrpland.conf file..."
+    
+    # Create Hyprland config directory if it doesn't exist
+    mkdir -p "$HOME/.config/hypr"
+    
+    # Copy the configuration file from .config directory
+    if [ -f ".config/hyprland.conf" ]; then
+        cp ".config/hyprland.conf" "$HOME/.config/hypr/hyprland.conf"
+        log info "Hyprland configuration copied to $HOME/.config/hypr/hyprland.conf"
+    else
+        log error "hyprland.conf not found in .config directory"
+    fi
+}
+
 # --------------------------------------
 # Theme setup
 # --------------------------------------
@@ -356,6 +371,7 @@ main() {
     sync_time
     configure_bluetooth_fastconnectable
     configure_sddm_theme
+    setup_hyprland_config
     setup_waybar_catppuccin_theme
     setup_ranger_dracula_theme
     setup_kitty_catppuccin_theme

@@ -347,7 +347,6 @@ main() {
     create_user_dirs
     install_pacman_packages
     add_user_to_docker_group
-    enable_services
     install_yay
     install_yay_packages
     install_oh_my_zsh
@@ -363,7 +362,8 @@ main() {
     setup_gtk3_catppuccin_theme
     setup_rofi_catppuccin_theme
     setup_nvim_catppuccin_theme
-    log info "Setup complete!"
+    log info "Setup complete!, now enabling services and starting them..."
+    enable_services
 }
 
 main

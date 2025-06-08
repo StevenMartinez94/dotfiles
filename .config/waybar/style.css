@@ -1,0 +1,64 @@
+/* Catppuccin Mocha-inspired minimal style */
+* {
+  border: none;
+  border-radius: 12px;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 13px;
+  min-height: 0;
+}
+
+window#waybar {
+  background: transparent;
+  color: #cdd6f4;
+}
+
+#workspaces button {
+  padding: 0 6px;
+  margin: 2px 3px;
+  border-radius: 10px;
+  background-color: #1e1e2e;
+  color: #cdd6f4;
+}
+
+#workspaces button.active {
+  background-color: #89b4fa;
+  color: #1e1e2e;
+}
+
+#pulseaudio,
+#memory,
+#cpu,
+#clock,
+#network,
+#tray,
+#backlight,
+#battery,
+#custom-playerctl {
+  padding: 0 10px;
+  background-color: #1e1e2e;
+  margin: 3px 4px;
+}
+
+#custom-playerctl {
+  background-color: #a6adc8;
+  color: #1e1e2e;
+  font-weight: bold;
+}
+
+#battery.charging {
+  color: #a6e3a1;
+}
+
+#battery.warning {
+  color: #f38ba8;
+}
+
+#battery.critical {
+  color: #f38ba8;
+  font-weight: bold;
+}
+
+#tray > * {
+  margin: 0 4px;
+}
+

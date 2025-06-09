@@ -68,13 +68,13 @@ chmod +x install.sh
 
 ### Theme Configuration
 - Catppuccin Mocha theme for:
-  - Waybar
   - Kitty terminal
   - GTK3 (Lavender accent)
   - Rofi
   - Neovim
 - Dracula theme for Ranger
 - Papirus Dark icons
+- Waybar
 
 ### Shell Configuration
 - zsh with oh-my-zsh

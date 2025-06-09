@@ -186,30 +186,24 @@ setup_hyprland_config() {
 # --------------------------------------
 # Theme setup
 # --------------------------------------
-setup_waybar_catppuccin_theme() {
-    log info "Setting up Catppuccin Mocha theme for Waybar..."
+setup_waybar_theme() {
+    log info "Setting up custom Waybar configuration..."
 
     local waybar_config="$HOME/.config/waybar"
-    local themes_dir="$waybar_config/themes"
-    local theme_url="https://raw.githubusercontent.com/catppuccin/waybar/main/themes/mocha.css"
-    local target_css="$themes_dir/mocha.css"
-    local symlink="$waybar_config/style.css"
+    local source_config=".config/waybar"
 
-    mkdir -p "$themes_dir"
-
-    # Download Mocha flavor CSS
-    curl -fsSL "$theme_url" -o "$target_css"
-    log info "Downloaded Catppuccin Mocha CSS."
-
-    # Backup existing style.css if it exists and is not already the desired symlink
-    if [ -f "$symlink" ] && [ ! -L "$symlink" ]; then
-        mv "$symlink" "$symlink.backup"
-        log warn "Backed up existing style.css to style.css.backup"
+    # Check if source directory exists
+    if [ ! -d "$source_config" ]; then
+        log error "Source directory $source_config does not exist"
+        return 1
     fi
 
-    # Link mocha theme to style.css
-    ln -sf "$target_css" "$symlink"
-    log info "Linked $target_css to $symlink"
+    # Create destination directory if it doesn't exist
+    mkdir -p "$waybar_config"
+
+    # Copy all files from source to destination
+    cp -r "$source_config"/* "$waybar_config/"
+    log info "Copied all Waybar configuration files to $waybar_config"
 }
 
 setup_ranger_dracula_theme() {

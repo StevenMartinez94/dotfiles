@@ -12,19 +12,6 @@ window#waybar {
   color: #cdd6f4;
 }
 
-#workspaces button {
-  padding: 0 6px;
-  margin: 2px 3px;
-  border-radius: 10px;
-  background-color: #1e1e2e;
-  color: #cdd6f4;
-}
-
-#workspaces button.active {
-  background-color: #89b4fa;
-  color: #1e1e2e;
-}
-
 #pulseaudio,
 #memory,
 #cpu,
@@ -61,4 +48,3 @@ window#waybar {
 #tray > * {
   margin: 0 4px;
 }
-

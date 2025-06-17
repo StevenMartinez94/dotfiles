@@ -233,38 +233,27 @@ setup_waybar_theme() {
     log info "Copied all Waybar configuration files to $waybar_config"
 }
 
-setup_ranger_dracula_theme() {
-    log info "Setting up Dracula theme for Ranger..."
+setup_ranger_theme() {
+    log info "Setting up custom Ranger configuration..."
 
     local ranger_config="$HOME/.config/ranger"
-    local theme_url="https://raw.githubusercontent.com/dracula/ranger/master/dracula.py"
-    local theme_dest="$ranger_config/colorschemes/dracula.py"
-    local rc_file="$ranger_config/rc.conf"
+    local source_config=".config/ranger"
 
-    # Ensure ranger config files are initialized
-    if [ ! -f "$rc_file" ]; then
-        ranger --copy-config=all
-        log info "Copied default ranger configuration files."
+    # Check if source directory exists
+    if [ ! -d "$source_config" ]; then
+        log error "Source directory $source_config does not exist"
+        return 1
     fi
 
-    # Create colorschemes directory if it doesn't exist
-    mkdir -p "$ranger_config/colorschemes"
-    log info "Ensured colorschemes directory exists"
+    # Create destination directory if it doesn't exist
+    mkdir -p "$ranger_config"
 
-    # Download Dracula theme file
-    curl -fsSL "$theme_url" -o "$theme_dest"
-    log info "Downloaded Dracula theme to $theme_dest"
-
-    # Ensure rc.conf includes the theme
-    if ! grep -q 'set colorscheme dracula' "$rc_file" 2>/dev/null; then
-        echo 'set colorscheme dracula' >> "$rc_file"
-        log info "Set Dracula as Ranger's colorscheme in rc.conf"
-    else
-        log warn "Ranger rc.conf already references Dracula"
-    fi
+    # Copy all files from source to destination
+    cp -r "$source_config"/* "$ranger_config/"
+    log info "Copied all Ranger configuration files to $ranger_config"
 }
 
-setup_kitty_catppuccin_theme() {
+setup_kitty_theme() {
     log info "Setting up Catppuccin Mocha theme for Kitty..."
 
     local kitty_config="$HOME/.config/kitty"
@@ -292,26 +281,27 @@ setup_kitty_catppuccin_theme() {
     fi
 }
 
-setup_gtk3_catppuccin_theme() {
-    log info "Installing Catppuccin Mocha GTK theme (lavender) via AUR..."
+setup_gtk3_theme() {
+    log info "Setting up custom GTK3 configuration..."
 
-    # Install AUR GTK theme variant with lavender accent
-    yay -S --needed --noconfirm catppuccin-gtk-theme-mocha
+    local gtk_config="$HOME/.config/gtk-3.0"
+    local source_config=".config/gtk-3.0"
 
-    # Apply theme using settings.ini (no Gnome/gsettings)
-    local gtk_dir="$HOME/.config/gtk-3.0"
-    mkdir -p "$gtk_dir"
-    cat > "$gtk_dir/settings.ini" <<EOF
-[Settings]
-gtk-theme-name=Catppuccin-Mocha-Lavender
-gtk-icon-theme-name=Papirus-Dark
-gtk-font-name=Noto Sans 10
-EOF
+    # Check if source directory exists
+    if [ ! -d "$source_config" ]; then
+        log error "Source directory $source_config does not exist"
+        return 1
+    fi
 
-    log info "Configured GTK 3 theme via ~/.config/gtk-3.0/settings.ini"
+    # Create destination directory if it doesn't exist
+    mkdir -p "$gtk_config"
+
+    # Copy all files from source to destination
+    cp -r "$source_config"/* "$gtk_config/"
+    log info "Copied all GTK3 configuration files to $gtk_config"
 }
 
-setup_rofi_catppuccin_theme() {
+setup_rofi_theme() {
     log info "Setting up custom Rofi configuration..."
 
     local rofi_config="$HOME/.config/rofi"
@@ -389,10 +379,10 @@ main() {
     configure_sddm_theme
     setup_hyprland_config
     setup_waybar_theme
-    setup_ranger_dracula_theme
-    setup_kitty_catppuccin_theme
-    setup_gtk3_catppuccin_theme
-    setup_rofi_catppuccin_theme
+    setup_ranger_theme
+    setup_kitty_theme
+    setup_gtk3_theme
+    setup_rofi_theme
     setup_nvim_catppuccin_theme
     log info "Setup complete!, now enabling services and starting them..."
     enable_services

@@ -10,7 +10,7 @@ This repository contains my system configuration, including:
 - System configuration
 - User directory structure
 - Package management (pacman and AUR)
-- Theme configurations (Catppuccin Mocha)
+- Theme configurations (Catppuccin Mocha based)
 
 ## Prerequisites
 
@@ -56,7 +56,7 @@ chmod +x install.sh
 - Google Chrome
 - Hyprland-related tools (hyprpaper, hyprpicker, hyprshot, hyprlock, hypridle)
 - Fonts (Cascadia Code Nerd, Font Awesome, JoyPixels, Noto Sans)
-- Spotify Player
+- ncspot (Spotify player for terminal)
 - Papirus Icon Theme
 - SDDM Theme Corners (customizable login screen theme)
 
@@ -67,14 +67,15 @@ chmod +x install.sh
   - Configurable through theme.conf
 
 ### Theme Configuration
-- Catppuccin Mocha theme for:
+- Custom theme configurations for:
   - Kitty terminal
-  - GTK3 (Lavender accent)
+  - GTK3
   - Rofi
   - Neovim
-- Dracula theme for Ranger
+  - Ranger
+  - Waybar
 - Papirus Dark icons
-- Waybar
+- SDDM Corners theme
 
 ### Shell Configuration
 - zsh with oh-my-zsh

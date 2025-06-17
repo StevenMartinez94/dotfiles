@@ -25,7 +25,7 @@
     "format": "Bluetooth {status} ",
     "format-connected": "{device_alias} ",
     "format-disabled": "Bluetooth Disabled ",
-    "tooltip-format": "{controller_alias}\n{device_alias} - {device_address}",
+    "tooltip-format": "{device_alias} - {device_address}",
     "on-click": "kitty -e bluetoothctl"
   },
 

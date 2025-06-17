@@ -312,28 +312,23 @@ EOF
 }
 
 setup_rofi_catppuccin_theme() {
-    log info "Setting up Catppuccin Mocha theme for Rofi (Wayland)..."
+    log info "Setting up custom Rofi configuration..."
 
     local rofi_config="$HOME/.config/rofi"
-    local theme_dir="$rofi_config/themes"
-    local theme_url="https://raw.githubusercontent.com/catppuccin/rofi/main/themes/catppuccin-mocha.rasi"
-    local theme_file="$theme_dir/catppuccin-mocha.rasi"
-    local config_file="$rofi_config/config.rasi"
+    local source_config=".config/rofi"
 
-    mkdir -p "$theme_dir"
-    curl -fsSL "$theme_url" -o "$theme_file"
-    log info "Downloaded Catppuccin Mocha theme for Rofi."
-
-    # Set theme in config.rasi
-    if [ ! -f "$config_file" ]; then
-        echo "@theme \"catppuccin-mocha\"" > "$config_file"
-        log info "Created config.rasi and set theme."
-    elif ! grep -q '@theme "catppuccin-mocha"' "$config_file"; then
-        echo "@theme \"catppuccin-mocha\"" >> "$config_file"
-        log info "Appended theme to config.rasi"
-    else
-        log warn "config.rasi already sets catppuccin-mocha theme"
+    # Check if source directory exists
+    if [ ! -d "$source_config" ]; then
+        log error "Source directory $source_config does not exist"
+        return 1
     fi
+
+    # Create destination directory if it doesn't exist
+    mkdir -p "$rofi_config"
+
+    # Copy all files from source to destination
+    cp -r "$source_config"/* "$rofi_config/"
+    log info "Copied all Rofi configuration files to $rofi_config"
 }
 
 setup_nvim_catppuccin_theme() {
@@ -393,7 +388,7 @@ main() {
     configure_bluetooth_fastconnectable
     configure_sddm_theme
     setup_hyprland_config
-    setup_waybar_catppuccin_theme
+    setup_waybar_theme
     setup_ranger_dracula_theme
     setup_kitty_catppuccin_theme
     setup_gtk3_catppuccin_theme

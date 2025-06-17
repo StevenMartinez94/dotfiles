@@ -156,15 +156,42 @@ configure_bluetooth_fastconnectable() {
 configure_sddm_theme() {
     log info "Configuring SDDM with Corners theme..."
     
-    # Create SDDM config directory if it doesn't exist
-    sudo mkdir -p /etc/sddm.conf.d/
+    # Create SDDM themes directory if it doesn't exist
+    sudo mkdir -p /usr/share/sddm/themes/corners/
     
-    # Create or update the theme configuration
-    cat << EOF | sudo tee /etc/sddm.conf.d/theme.conf
-[Theme]
-Current=corners
-EOF
-    
+    # Copy the theme configuration file
+    if [ -f "./ssdm/theme.conf" ]; then
+        sudo cp "./ssdm/theme.conf" "/usr/share/sddm/themes/corners/theme.conf"
+        log info "SDDM theme configuration copied to /usr/share/sddm/themes/corners/theme.conf"
+    else
+        log error "theme.conf not found in ./ssdm directory"
+        return 1
+    fi
+
+    # Create or ensure SDDM config directory exists
+    sudo mkdir -p /usr/lib/sddm/sddm.conf.d/
+    CONFIG_FILE="/usr/lib/sddm/sddm.conf.d/default.conf"
+
+    # Create the file if it doesn't exist
+    if [ ! -f "$CONFIG_FILE" ]; then
+        echo -e "[Theme]\nCurrent=corners" | sudo tee "$CONFIG_FILE" > /dev/null
+    else
+        # Check if [Theme] section exists
+        if grep -q "^\[Theme\]" "$CONFIG_FILE"; then
+            # If section exists, update or append the Current setting
+            if grep -q "^\[Theme\]" "$CONFIG_FILE" && grep -A 5 "^\[Theme\]" "$CONFIG_FILE" | grep -q "^Current="; then
+                # Replace existing Current line under [Theme]
+                sudo sed -i '/^\[Theme\]/,/^\[.*\]/ s/^Current=.*/Current=corners/' "$CONFIG_FILE"
+            else
+                # Add Current=corners under existing [Theme] section
+                sudo sed -i '/^\[Theme\]/a Current=corners' "$CONFIG_FILE"
+            fi
+        else
+            # Add new [Theme] section at the end
+            echo -e "\n[Theme]\nCurrent=corners" | sudo tee -a "$CONFIG_FILE" > /dev/null
+        fi
+    fi
+
     log info "SDDM theme configured to use Corners theme"
 }
 

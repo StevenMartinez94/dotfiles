@@ -160,11 +160,11 @@ configure_sddm_theme() {
     sudo mkdir -p /usr/share/sddm/themes/corners/
     
     # Copy the theme configuration file
-    if [ -f "./ssdm/theme.conf" ]; then
-        sudo cp "./ssdm/theme.conf" "/usr/share/sddm/themes/corners/theme.conf"
+    if [ -f "./sddm/theme.conf" ]; then
+        sudo cp "./sddm/theme.conf" "/usr/share/sddm/themes/corners/theme.conf"
         log info "SDDM theme configuration copied to /usr/share/sddm/themes/corners/theme.conf"
     else
-        log error "theme.conf not found in ./ssdm directory"
+        log error "theme.conf not found in ./sddm directory"
         return 1
     fi
 
@@ -202,11 +202,11 @@ setup_hyprland_config() {
     mkdir -p "$HOME/.config/hypr"
     
     # Copy the configuration file from .config directory
-    if [ -f ".config/hyprland.conf" ]; then
-        cp ".config/hyprland.conf" "$HOME/.config/hypr/hyprland.conf"
+    if [ -f "./.config/hypr/hyprland.conf" ]; then
+        cp "./.config/hypr/hyprland.conf" "$HOME/.config/hypr/hyprland.conf"
         log info "Hyprland configuration copied to $HOME/.config/hypr/hyprland.conf"
     else
-        log error "hyprland.conf not found in .config directory"
+        log error "hyprland.conf not found in ./.config directory"
     fi
 }
 
@@ -217,7 +217,7 @@ setup_waybar_theme() {
     log info "Setting up custom Waybar configuration..."
 
     local waybar_config="$HOME/.config/waybar"
-    local source_config=".config/waybar"
+    local source_config="./.config/waybar"
 
     # Check if source directory exists
     if [ ! -d "$source_config" ]; then
@@ -237,7 +237,7 @@ setup_ranger_theme() {
     log info "Setting up custom Ranger configuration..."
 
     local ranger_config="$HOME/.config/ranger"
-    local source_config=".config/ranger"
+    local source_config="./.config/ranger"
 
     # Check if source directory exists
     if [ ! -d "$source_config" ]; then
@@ -285,7 +285,7 @@ setup_gtk3_theme() {
     log info "Setting up custom GTK3 configuration..."
 
     local gtk_config="$HOME/.config/gtk-3.0"
-    local source_config=".config/gtk-3.0"
+    local source_config="./.config/gtk-3.0"
 
     # Check if source directory exists
     if [ ! -d "$source_config" ]; then
@@ -305,7 +305,7 @@ setup_rofi_theme() {
     log info "Setting up custom Rofi configuration..."
 
     local rofi_config="$HOME/.config/rofi"
-    local source_config=".config/rofi"
+    local source_config="./.config/rofi"
 
     # Check if source directory exists
     if [ ! -d "$source_config" ]; then
@@ -321,7 +321,7 @@ setup_rofi_theme() {
     log info "Copied all Rofi configuration files to $rofi_config"
 }
 
-setup_nvim_catppuccin_theme() {
+setup_nvim_theme() {
     log info "Installing Catppuccin Mocha theme for Neovim..."
 
     local nvim_config="$HOME/.config/nvim"
@@ -383,7 +383,7 @@ main() {
     setup_kitty_theme
     setup_gtk3_theme
     setup_rofi_theme
-    setup_nvim_catppuccin_theme
+    setup_nvim_theme
     log info "Setup complete!, now enabling services and starting them..."
     enable_services
 }

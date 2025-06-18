@@ -238,6 +238,8 @@ setup_ranger_theme() {
 
     local ranger_config="$HOME/.config/ranger"
     local source_config="./.config/ranger"
+    local theme_url="https://raw.githubusercontent.com/dracula/ranger/master/dracula.py"
+    local theme_dest="$ranger_config/colorschemes/dracula.py"
 
     # Check if source directory exists
     if [ ! -d "$source_config" ]; then
@@ -247,6 +249,14 @@ setup_ranger_theme() {
 
     # Create destination directory if it doesn't exist
     mkdir -p "$ranger_config"
+
+    # Create colorschemes directory if it doesn't exist
+    mkdir -p "$ranger_config/colorschemes"
+    log info "Ensured colorschemes directory exists"
+
+    # Download Dracula theme file
+    curl -fsSL "$theme_url" -o "$theme_dest"
+    log info "Downloaded Dracula theme to $theme_dest"
 
     # Copy all files from source to destination
     cp -r "$source_config"/* "$ranger_config/"

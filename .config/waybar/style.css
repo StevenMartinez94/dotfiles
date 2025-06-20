@@ -12,6 +12,13 @@ window#waybar {
   color: #cdd6f4;
 }
 
+#custom-bluetooth {
+  padding: 0 10px;
+  background-color: #1e1e2e;
+  margin: 3px 4px;
+  color: #cdd6f4;
+}
+
 #pulseaudio,
 #memory,
 #cpu,

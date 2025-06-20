@@ -77,7 +77,7 @@ install_yay_packages() {
     yay -S --needed --noconfirm \
         gowall waybar cursor-bin rofi-lbonn-wayland-git grpcurl google-chrome hyprpaper hyprpicker \
         hyprshot hyprlock hypridle nwg-look ncspot papirus-icon-theme paru sddm-theme-corners-git \
-        ttf-cascadia-code-nerd ttf-font-awesome ttf-joypixels nerd-fonts-complete noto-fons
+        ttf-cascadia-code-nerd ttf-font-awesome ttf-joypixels nerd-fonts-complete noto-fons ttf-jetbrains-mono-nerd
 }
 
 install_oh_my_zsh() {
@@ -115,6 +115,9 @@ install_zsh_plugins() {
     else
         log warn "zsh-autosuggestions already installed"
     fi
+    # Copying custom .zshrc file
+    cp "./.zshrc" "$HOME/.zshrc"
+    log info "Copied custom .zshrc to $HOME/.zshrc"
 }
 
 sync_time() {

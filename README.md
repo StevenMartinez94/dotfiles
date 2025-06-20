@@ -56,7 +56,7 @@ chmod +x install.sh
 - Google Chrome
 - Hyprland-related tools (hyprpaper, hyprpicker, hyprshot, hyprlock, hypridle)
 - Fonts (Cascadia Code Nerd, Font Awesome, JoyPixels, Noto Sans)
-- ncspot (Spotify player for terminal)
+- ncspot (Terminal Spotify player)
 - Papirus Icon Theme
 - SDDM Theme Corners (customizable login screen theme)
 

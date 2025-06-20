@@ -13,7 +13,3 @@ export TERM=xterm-256color
 
 # Enable ZSH
 source $ZSH/oh-my-zsh.sh
-
-# Enable custom plugins
-source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $ZSH/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh

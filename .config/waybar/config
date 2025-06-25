@@ -77,6 +77,7 @@
   "battery": {
     "bat": "BAT0",
     "interval": 30,
+    "format": "{capacity}% \uf240 ",
     "format-charging": "{capacity}% \uf0e7",
     "format-plugged": "{capacity}% \uf240 ",
     "tooltip": false

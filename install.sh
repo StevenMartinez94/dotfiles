@@ -42,7 +42,9 @@ install_pacman_packages() {
         speedtest-cli jq fastfetch unzip neovim git gcc hyprland kitty ranger wget zsh \
         base-devel bluez bluez-utils bpytop tree docker docker-compose python-pip pyenv \
         less websocat nodejs npm brightnessctl pavucontrol openssh sddm pacman-contrib \
-        xdg-desktop-portal-hyprland xdg-desktop-portal-gtk obs-studio
+        xdg-desktop-portal-hyprland xdg-desktop-portal-gtk obs-studio noto-fonts noto-fonts-cjk \
+        ttf-cascadia-code ttf-cascadia-code-nerd ttf-font-awesome ttf-joypixels \
+        ttf-jetbrains-mono-nerd ttf-iosevka-nerd
 }
 
 add_user_to_docker_group() {
@@ -76,8 +78,7 @@ install_yay_packages() {
     log info "Installing AUR packages with yay..."
     yay -S --needed --noconfirm \
         gowall waybar cursor-bin rofi-lbonn-wayland-git grpcurl google-chrome hyprpaper hyprpicker \
-        hyprshot hyprlock hypridle nwg-look ncspot papirus-icon-theme paru sddm-theme-corners-git \
-        ttf-cascadia-code-nerd ttf-font-awesome ttf-joypixels nerd-fonts-complete noto-fons ttf-jetbrains-mono-nerd
+        hyprshot hyprlock hypridle nwg-look ncspot papirus-icon-theme paru sddm-theme-corners-git
 }
 
 install_oh_my_zsh() {

@@ -43,7 +43,7 @@ install_pacman_packages() {
         base-devel bluez bluez-utils bpytop tree docker docker-compose python-pip pyenv \
         less websocat nodejs npm brightnessctl pavucontrol openssh sddm pacman-contrib \
         xdg-desktop-portal-hyprland xdg-desktop-portal-gtk obs-studio noto-fonts noto-fonts-cjk \
-        ttf-cascadia-code ttf-cascadia-code-nerd ttf-font-awesome ttf-joypixels \
+        ttf-cascadia-code ttf-cascadia-code-nerd ttf-font-awesome noto-fonts-emoji \
         ttf-jetbrains-mono-nerd ttf-iosevka-nerd
 }
 

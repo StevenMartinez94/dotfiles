@@ -12,6 +12,15 @@ window#waybar {
   color: #cdd6f4;
 }
 
+#custom-mic {
+  padding: 0 10px;
+  background-color: #1e1e2e;
+  margin: 3px 4px;
+  color: #cdd6f4;
+  min-width: 24px; 
+  font-size: 16px;
+}
+
 #custom-bluetooth {
   padding: 0 10px;
   background-color: #1e1e2e;

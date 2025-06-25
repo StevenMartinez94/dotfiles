@@ -5,7 +5,8 @@
   "margin": 5,
 
   "modules-left": [
-    "custom/bluetooth"
+    "custom/bluetooth",
+    "custom/mic"
   ],
   "modules-center": [
     "custom/playerctl"
@@ -21,18 +22,27 @@
     "tray"
   ],
 
+  "custom/mic": {
+    "exec": "wpctl get-volume @DEFAULT_SOURCE@ | grep -q MUTED && echo '\udb80\udf6c' || echo '\udb80\udf6d'",
+    "interval": 1,
+    "on-click": "wpctl set-mute @DEFAULT_SOURCE@ toggle",
+    "tooltip": false
+  },
+
   "custom/bluetooth": {
     "exec": "~/.config/waybar/scripts/fetch_bluetooth_devices.sh",
-    "interval": 5,
+    "interval": 3,
     "on-click": "kitty -e bluetoothctl",
-    "format": "{}"
+    "format": "{}",
+    "tooltip": false
   },
 
   "custom/playerctl": {
     "exec": "playerctl metadata --format '{{ title }} - {{ artist }}'",
-    "interval": 5,
+    "interval": 3,
     "format": "{}",
-    "on-click": "playerctl play-pause"
+    "on-click": "playerctl play-pause",
+    "tooltip": false
   },
 
   "pulseaudio": {
@@ -45,7 +55,7 @@
     "format-wifi": "{essid} ({signalStrength}%) \uf1eb ",
     "format-ethernet": "\uef44 {ifname}",
     "format-disconnected": "Disconnected \uea6c ",
-    "tooltip": true
+    "tooltip": false
   },
 
   "cpu": {
@@ -60,7 +70,8 @@
 
   "backlight": {
     "device": "intel_backlight",
-    "format": "{percent}% \ue30d"
+    "format": "{percent}% \ue30d",
+    "tooltip": false
   },
 
   "battery": {
@@ -68,7 +79,8 @@
     "interval": 30,
     "format": "{capacity}% \uf240 ",
     "format-charging": "{capacity}% \uf0e7",
-    "format-plugged": "{capacity}% \uf0e7"
+    "format-plugged": "{capacity}% \uf0e7",
+    "tooltip": false
   },
 
   "clock": {

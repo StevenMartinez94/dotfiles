@@ -44,7 +44,7 @@ install_pacman_packages() {
         less websocat nodejs npm brightnessctl pavucontrol openssh sddm pacman-contrib \
         xdg-desktop-portal-hyprland xdg-desktop-portal-gtk obs-studio noto-fonts noto-fonts-cjk \
         ttf-cascadia-code ttf-cascadia-code-nerd ttf-font-awesome noto-fonts-emoji \
-        ttf-jetbrains-mono-nerd ttf-iosevka-nerd
+        ttf-jetbrains-mono-nerd ttf-iosevka-nerd rofi-wayland
 }
 
 add_user_to_docker_group() {
@@ -77,7 +77,7 @@ install_yay() {
 install_yay_packages() {
     log info "Installing AUR packages with yay..."
     yay -S --needed --noconfirm \
-        gowall waybar cursor-bin rofi-lbonn-wayland-git grpcurl google-chrome hyprpaper hyprpicker \
+        gowall waybar cursor-bin grpcurl google-chrome hyprpaper hyprpicker \
         hyprshot hyprlock hypridle nwg-look ncspot papirus-icon-theme paru sddm-theme-corners-git
 }
 

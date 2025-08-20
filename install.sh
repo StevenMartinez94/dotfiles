@@ -77,7 +77,7 @@ install_yay() {
 install_yay_packages() {
     log info "Installing AUR packages with yay..."
     yay -S --needed --noconfirm \
-        gowall waybar cursor-bin grpcurl google-chrome hyprpaper hyprpicker \
+        gowall waybar visual-studio-code-bin grpcurl google-chrome hyprpaper hyprpicker \
         hyprshot hyprlock hypridle nwg-look ncspot papirus-icon-theme paru sddm-theme-corners-git
 }
 

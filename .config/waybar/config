@@ -23,7 +23,7 @@
   ],
 
   "custom/mic": {
-    "exec": "wpctl get-volume @DEFAULT_SOURCE@ | grep -q MUTED && echo '\udb80\udf6c' || echo '\udb80\udf6d'",
+    "exec": "wpctl get-volume @DEFAULT_SOURCE@ | grep -q MUTED && echo '\udb80\udf6d' || echo '\udb80\udf6c'",
     "interval": 1,
     "on-click": "wpctl set-mute @DEFAULT_SOURCE@ toggle",
     "tooltip": false

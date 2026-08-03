@@ -49,7 +49,8 @@ install_yay() {
     if ! command -v yay &>/dev/null; then
         log info "Installing yay AUR helper..."
         temp_dir=$(mktemp -d)
-        git clone https://aur.archlinux.org/yay.git "$temp_dir/yay"
+        sudo pacman -S --needed git base-devel
+        git clone https://aur.archlinux.org/yay-bin.git "$temp_dir/yay"
         (cd "$temp_dir/yay" && makepkg -si --noconfirm)
         rm -rf "$temp_dir"
         log info "yay installed successfully."
@@ -63,7 +64,7 @@ install_yay_packages() {
     yay -Syuu --noconfirm
     yay -S --needed --noconfirm \
         speedtest-cli fastfetch nerdfetch unzip gcc hyprland kitty yazi zsh \
-        base-devel bluez bluez-utils bpytop tree swaync qt5-wayland qt6-wayland \
+        bluez bluez-utils bpytop tree swaync qt5-wayland qt6-wayland \
         less brightnessctl pavucontrol pacman-contrib awww udiskie matugen-bin \
         xdg-desktop-portal-hyprland xdg-desktop-portal-gtk obs-studio noto-fonts noto-fonts-cjk \
         ttf-cascadia-code ttf-cascadia-code-nerd ttf-font-awesome noto-fonts-emoji \

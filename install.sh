@@ -190,13 +190,11 @@ setup_waybar_theme() {
     log info "Copied all Waybar configuration files to $waybar_config"
 }
 
-setup_ranger_theme() {
-    log info "Setting up custom Ranger configuration..."
+setup_kitty_config() {
+    log info "Setting up Kitty configuration..."
 
-    local ranger_config="$HOME/.config/ranger"
-    local source_config="./.config/ranger"
-    local theme_url="https://raw.githubusercontent.com/dracula/ranger/master/dracula.py"
-    local theme_dest="$ranger_config/colorschemes/dracula.py"
+    local kitty_config="$HOME/.config/kitty"
+    local source_config="./.config/kitty"
 
     # Check if source directory exists
     if [ ! -d "$source_config" ]; then
@@ -205,47 +203,11 @@ setup_ranger_theme() {
     fi
 
     # Create destination directory if it doesn't exist
-    mkdir -p "$ranger_config"
-
-    # Create colorschemes directory if it doesn't exist
-    mkdir -p "$ranger_config/colorschemes"
-    log info "Ensured colorschemes directory exists"
-
-    # Download Dracula theme file
-    curl -fsSL "$theme_url" -o "$theme_dest"
-    log info "Downloaded Dracula theme to $theme_dest"
+    mkdir -p "$kitty_config"
 
     # Copy all files from source to destination
-    cp -r "$source_config"/* "$ranger_config/"
-    log info "Copied all Ranger configuration files to $ranger_config"
-}
-
-setup_kitty_theme() {
-    log info "Setting up Catppuccin Mocha theme for Kitty..."
-
-    local kitty_config="$HOME/.config/kitty"
-    local theme_url="https://raw.githubusercontent.com/catppuccin/kitty/main/themes/mocha.conf"
-    local theme_file="$kitty_config/mocha.conf"
-    local main_conf="$kitty_config/kitty.conf"
-
-    mkdir -p "$kitty_config"
-    curl -fsSL "$theme_url" -o "$theme_file"
-    log info "Downloaded Mocha theme for Kitty."
-
-    # Ensure main kitty.conf includes the theme and sets the font
-    if ! grep -q "include mocha.conf" "$main_conf" 2>/dev/null; then
-        echo "include mocha.conf" >> "$main_conf"
-        log info "Appended theme include to kitty.conf"
-    else
-        log warn "kitty.conf already includes mocha.conf"
-    fi
-
-    if ! grep -qi "^font_family" "$main_conf" 2>/dev/null; then
-        echo "font_family Cascadia Code" >> "$main_conf"
-        log info "Set font to Cascadia Code in kitty.conf"
-    else
-        log warn "kitty.conf already defines a font_family"
-    fi
+    cp -r "$source_config"/* "$kitty_config/"
+    log info "Copied all Kitty configuration files to $kitty_config"
 }
 
 setup_gtk3_theme() {
@@ -268,6 +230,26 @@ setup_gtk3_theme() {
     log info "Copied all GTK3 configuration files to $gtk_config"
 }
 
+setup_gtk4_theme() {
+    log info "Setting up custom GTK4 configuration..."
+
+    local gtk_config="$HOME/.config/gtk-4.0"
+    local source_config="./.config/gtk-4.0"
+
+    # Check if source directory exists
+    if [ ! -d "$source_config" ]; then
+        log error "Source directory $source_config does not exist"
+        return 1
+    fi
+
+    # Create destination directory if it doesn't exist
+    mkdir -p "$gtk_config"
+
+    # Copy all files from source to destination
+    cp -r "$source_config"/* "$gtk_config/"
+    log info "Copied all GTK4 configuration files to $gtk_config"
+}
+
 setup_rofi_theme() {
     log info "Setting up custom Rofi configuration..."
 
@@ -288,43 +270,48 @@ setup_rofi_theme() {
     log info "Copied all Rofi configuration files to $rofi_config"
 }
 
-setup_nvim_theme() {
-    log info "Installing Catppuccin Mocha theme for Neovim..."
+setup_matugen_config() {
+    log info "Setting up matugen configuration..."
 
-    local nvim_config="$HOME/.config/nvim"
-    local theme_repo="https://github.com/catppuccin/nvim.git"
-    local theme_temp="$(mktemp -d)"
-    local theme_dest="$nvim_config/pack/plugins/start/catppuccin.nvim"
+    local matugen_config="$HOME/.config/matugen"
+    local source_config="./.config/matugen"
 
-    mkdir -p "$nvim_config/pack/plugins/start"
-    git clone --depth=1 "$theme_repo" "$theme_temp"
-    mv "$theme_temp" "$theme_dest"
-    log info "Cloned catppuccin.nvim into $theme_dest"
-
-    # Add Catppuccin theme setup to init.lua
-    local init_file="$nvim_config/init.lua"
-    if [ ! -f "$init_file" ]; then
-        touch "$init_file"
+    # Check if source directory exists
+    if [ ! -d "$source_config" ]; then
+        log error "Source directory $source_config does not exist"
+        return 1
     fi
 
-    if ! grep -q 'catppuccin' "$init_file"; then
-        cat >> "$init_file" <<EOF
+    # Create destination directory if it doesn't exist
+    mkdir -p "$matugen_config"
 
--- Catppuccin Mocha (Lavender) theme setup
-vim.cmd.colorscheme "catppuccin"
-require("catppuccin").setup {
-    flavour = "mocha",
-    integrations = {
-        nvimtree = true,
-        treesitter = true,
-        telescope = true,
-    }
+    # Copy all files from source to destination
+    cp -r "$source_config"/* "$matugen_config/"
+
+    # Make post-hook scripts executable
+    chmod +x "$matugen_config"/post-hook-scripts/*.sh 2>/dev/null || true
+
+    log info "Copied all matugen configuration files to $matugen_config"
 }
-EOF
-        log info "Appended Catppuccin setup to init.lua"
-    else
-        log warn "init.lua already contains Catppuccin configuration"
+
+setup_wlogout_config() {
+    log info "Setting up wlogout configuration..."
+
+    local wlogout_config="$HOME/.config/wlogout"
+    local source_config="./.config/wlogout"
+
+    # Check if source directory exists
+    if [ ! -d "$source_config" ]; then
+        log error "Source directory $source_config does not exist"
+        return 1
     fi
+
+    # Create destination directory if it doesn't exist
+    mkdir -p "$wlogout_config"
+
+    # Copy all files from source to destination
+    cp -r "$source_config"/* "$wlogout_config/"
+    log info "Copied all wlogout configuration files to $wlogout_config"
 }
 
 # --------------------------------------
@@ -342,14 +329,14 @@ main() {
     cleanup_shell_files
     sync_time
     configure_bluetooth_fastconnectable
-    configure_sddm_theme
     setup_hyprland_config
     setup_waybar_theme
-    setup_ranger_theme
-    setup_kitty_theme
+    setup_kitty_config
     setup_gtk3_theme
+    setup_gtk4_theme
     setup_rofi_theme
-    setup_nvim_theme
+    setup_matugen_config
+    setup_wlogout_config
     log info "Setup complete!, now enabling services and starting them..."
     enable_services
 }

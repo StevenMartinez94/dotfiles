@@ -40,20 +40,16 @@ add_user_to_docker_group() {
     sudo usermod -aG docker "$USER"
 }
 
-enable_services() {
-    log info "Enabling and starting services..."
-    for service in docker.service docker.socket containerd.service bluetooth.service sddm.service; do
-        sudo systemctl enable "$service"
-        sudo systemctl start "$service"
-        log info "Service enabled: $service"
-    done
+enable_docker_service() {
+    log info "Enabling and starting docker service..."
+    sudo systemctl enable --now docker.service
 }
 
 install_yay() {
     if ! command -v yay &>/dev/null; then
         log info "Installing yay AUR helper..."
         temp_dir=$(mktemp -d)
-        git clone https://aur.archlinux.org/yay.git "$temp_dir/yay"
+        git clone https://aur.archlinux.org/yay-bin.git "$temp_dir/yay"
         (cd "$temp_dir/yay" && makepkg -si --noconfirm)
         rm -rf "$temp_dir"
         log info "yay installed successfully."
@@ -171,108 +167,100 @@ setup_hyprland_config() {
 # Theme setup
 # --------------------------------------
 setup_waybar_theme() {
-    log info "Setting up custom Waybar configuration..."
-
-    local waybar_config="$HOME/.config/waybar"
-    local source_config="./.config/waybar"
-
-    # Check if source directory exists
-    if [ ! -d "$source_config" ]; then
-        log error "Source directory $source_config does not exist"
-        return 1
+    log info "Setting up waybar config..."
+    
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$HOME/.config/waybar" ]; then
+        mkdir -p "$HOME/.config/waybar"
+        log info "Created directory: $HOME/.config/waybar"
     fi
-
-    # Create destination directory if it doesn't exist
-    mkdir -p "$waybar_config"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$waybar_config/"
-    log info "Copied all Waybar configuration files to $waybar_config"
+    
+    # Copy the .config/waybar directory from this repo
+    cp -r "./.config/waybar"/* "$HOME/.config/waybar/"
+    log info "Waybar configuration copied to $HOME/.config/waybar"
 }
 
-setup_ranger_theme() {
-    log info "Setting up custom Ranger configuration..."
-
-    local ranger_config="$HOME/.config/ranger"
-    local source_config="./.config/ranger"
-    local theme_url="https://raw.githubusercontent.com/dracula/ranger/master/dracula.py"
-    local theme_dest="$ranger_config/colorschemes/dracula.py"
-
-    # Check if source directory exists
-    if [ ! -d "$source_config" ]; then
-        log error "Source directory $source_config does not exist"
-        return 1
+setup_kitty_config() {
+    log info "Setting up kitty config..."
+    
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$HOME/.config/kitty" ]; then
+        mkdir -p "$HOME/.config/kitty"
+        log info "Created directory: $HOME/.config/kitty"
     fi
-
-    # Create destination directory if it doesn't exist
-    mkdir -p "$ranger_config"
-
-    # Create colorschemes directory if it doesn't exist
-    mkdir -p "$ranger_config/colorschemes"
-    log info "Ensured colorschemes directory exists"
-
-    # Download Dracula theme file
-    curl -fsSL "$theme_url" -o "$theme_dest"
-    log info "Downloaded Dracula theme to $theme_dest"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$ranger_config/"
-    log info "Copied all Ranger configuration files to $ranger_config"
-}
-
-setup_kitty_theme() {
-    log info "Setting up Catppuccin Mocha theme for Kitty..."
-
-    local kitty_config="$HOME/.config/kitty"
-    local theme_url="https://raw.githubusercontent.com/catppuccin/kitty/main/themes/mocha.conf"
-    local theme_file="$kitty_config/mocha.conf"
-    local main_conf="$kitty_config/kitty.conf"
-
-    mkdir -p "$kitty_config"
-    curl -fsSL "$theme_url" -o "$theme_file"
-    log info "Downloaded Mocha theme for Kitty."
-
-    # Ensure main kitty.conf includes the theme and sets the font
-    if ! grep -q "include mocha.conf" "$main_conf" 2>/dev/null; then
-        echo "include mocha.conf" >> "$main_conf"
-        log info "Appended theme include to kitty.conf"
-    else
-        log warn "kitty.conf already includes mocha.conf"
-    fi
-
-    if ! grep -qi "^font_family" "$main_conf" 2>/dev/null; then
-        echo "font_family Cascadia Code" >> "$main_conf"
-        log info "Set font to Cascadia Code in kitty.conf"
-    else
-        log warn "kitty.conf already defines a font_family"
-    fi
+    
+    # Copy the .config/kitty directory from this repo
+    cp -r "./.config/kitty"/* "$HOME/.config/kitty/"
+    log info "Kitty configuration copied to $HOME/.config/kitty"
 }
 
 setup_gtk3_theme() {
-    log info "Setting up custom GTK3 configuration..."
-
-    local gtk_config="$HOME/.config/gtk-3.0"
-    local source_config="./.config/gtk-3.0"
-
-    # Check if source directory exists
-    if [ ! -d "$source_config" ]; then
-        log error "Source directory $source_config does not exist"
-        return 1
+    log info "Setting up gtk3 config..."
+    
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$HOME/.config/gtk-3.0" ]; then
+        mkdir -p "$HOME/.config/gtk-3.0"
+        log info "Created directory: $HOME/.config/gtk-3.0"
     fi
+    
+    # Copy the .config/gtk-3.0 directory from this repo
+    cp -r "./.config/gtk-3.0"/* "$HOME/.config/gtk-3.0/"
+    log info "GTK-3 configuration copied to $HOME/.config/gtk-3.0"
+}
 
-    # Create destination directory if it doesn't exist
-    mkdir -p "$gtk_config"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$gtk_config/"
-    log info "Copied all GTK3 configuration files to $gtk_config"
+setup_gtk4_theme() {
+    log info "Setting up gtk4 config..."
+    
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$HOME/.config/gtk-4.0" ]; then
+        mkdir -p "$HOME/.config/gtk-4.0"
+        log info "Created directory: $HOME/.config/gtk-4.0"
+    fi
+    
+    # Copy the .config/gtk-4.0 directory from this repo
+    cp -r "./.config/gtk-4.0"/* "$HOME/.config/gtk-4.0/"
+    log info "GTK-4 configuration copied to $HOME/.config/gtk-4.0"
 }
 
 setup_rofi_theme() {
-    log info "Setting up custom Rofi configuration..."
+    log info "Setting up rofi config..."
+    
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$HOME/.config/rofi" ]; then
+        mkdir -p "$HOME/.config/rofi"
+        log info "Created directory: $HOME/.config/rofi"
+    fi
+    
+    # Copy the .config/rofi directory from this repo
+    cp -r "./.config/rofi"/* "$HOME/.config/rofi/"
+    log info "Rofi configuration copied to $HOME/.config/rofi"
+}
 
-    local rofi_config="$HOME/.config/rofi"
-    local source_config="./.config/rofi"
+setup_matugen_config() {
+    log info "Setting up matugen configuration..."
+	local matugen_config="$HOME/.config/matugen"
+
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$matugen_config" ]; then
+        mkdir -p "$matugen_config"
+        log info "Created directory: $matugen_config"
+    fi
+    
+	# Copy the .config/matugen directory from this repo
+    cp -r "./.config/matugen"/* "$matugen_config"
+    log info "Matugen configuration copied to $matugen_config"
+
+    # Make post-hook scripts executable
+    chmod +x "$matugen_config"/post-hook-scripts/*.sh 2>/dev/null || true
+
+    log info "Copied all matugen configuration files to $matugen_config"
+}
+
+setup_wlogout_config() {
+    log info "Setting up wlogout configuration..."
+
+    local wlogout_config="$HOME/.config/wlogout"
+    local source_config="./.config/wlogout"
 
     # Check if source directory exists
     if [ ! -d "$source_config" ]; then
@@ -281,50 +269,11 @@ setup_rofi_theme() {
     fi
 
     # Create destination directory if it doesn't exist
-    mkdir -p "$rofi_config"
+    mkdir -p "$wlogout_config"
 
     # Copy all files from source to destination
-    cp -r "$source_config"/* "$rofi_config/"
-    log info "Copied all Rofi configuration files to $rofi_config"
-}
-
-setup_nvim_theme() {
-    log info "Installing Catppuccin Mocha theme for Neovim..."
-
-    local nvim_config="$HOME/.config/nvim"
-    local theme_repo="https://github.com/catppuccin/nvim.git"
-    local theme_temp="$(mktemp -d)"
-    local theme_dest="$nvim_config/pack/plugins/start/catppuccin.nvim"
-
-    mkdir -p "$nvim_config/pack/plugins/start"
-    git clone --depth=1 "$theme_repo" "$theme_temp"
-    mv "$theme_temp" "$theme_dest"
-    log info "Cloned catppuccin.nvim into $theme_dest"
-
-    # Add Catppuccin theme setup to init.lua
-    local init_file="$nvim_config/init.lua"
-    if [ ! -f "$init_file" ]; then
-        touch "$init_file"
-    fi
-
-    if ! grep -q 'catppuccin' "$init_file"; then
-        cat >> "$init_file" <<EOF
-
--- Catppuccin Mocha (Lavender) theme setup
-vim.cmd.colorscheme "catppuccin"
-require("catppuccin").setup {
-    flavour = "mocha",
-    integrations = {
-        nvimtree = true,
-        treesitter = true,
-        telescope = true,
-    }
-}
-EOF
-        log info "Appended Catppuccin setup to init.lua"
-    else
-        log warn "init.lua already contains Catppuccin configuration"
-    fi
+    cp -r "$source_config"/* "$wlogout_config/"
+    log info "Copied all wlogout configuration files to $wlogout_config"
 }
 
 # --------------------------------------
@@ -342,16 +291,16 @@ main() {
     cleanup_shell_files
     sync_time
     configure_bluetooth_fastconnectable
-    configure_sddm_theme
     setup_hyprland_config
     setup_waybar_theme
-    setup_ranger_theme
-    setup_kitty_theme
+    setup_kitty_config
     setup_gtk3_theme
+    setup_gtk4_theme
     setup_rofi_theme
-    setup_nvim_theme
+    setup_matugen_config
+    setup_wlogout_config
     log info "Setup complete!, now enabling services and starting them..."
-    enable_services
+    enable_docker_service
 }
 
 main

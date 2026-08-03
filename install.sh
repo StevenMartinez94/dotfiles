@@ -282,7 +282,6 @@ setup_wlogout_config() {
 main() {
     check_not_root
     create_user_dirs
-    add_user_to_docker_group
     install_yay
     install_yay_packages
     install_oh_my_zsh
@@ -301,6 +300,7 @@ main() {
     setup_wlogout_config
     log info "Setup complete!, now enabling services and starting them..."
     enable_docker_service
+    add_user_to_docker_group
 }
 
 main

@@ -35,18 +35,6 @@ create_user_dirs() {
     done
 }
 
-install_pacman_packages() {
-    log info "Updating system and installing pacman packages..."
-    sudo pacman -Syu --noconfirm
-    sudo pacman -S --needed --noconfirm \
-        speedtest-cli jq fastfetch unzip neovim git gcc hyprland kitty ranger wget zsh \
-        base-devel bluez bluez-utils bpytop tree docker docker-compose python-pip pyenv \
-        less websocat nodejs npm brightnessctl pavucontrol openssh sddm pacman-contrib \
-        xdg-desktop-portal-hyprland xdg-desktop-portal-gtk obs-studio noto-fonts noto-fonts-cjk \
-        ttf-cascadia-code ttf-cascadia-code-nerd ttf-font-awesome noto-fonts-emoji \
-        ttf-jetbrains-mono-nerd ttf-iosevka-nerd rofi-wayland
-}
-
 add_user_to_docker_group() {
     log info "Adding user to docker group..."
     sudo usermod -aG docker "$USER"
@@ -76,9 +64,17 @@ install_yay() {
 
 install_yay_packages() {
     log info "Installing AUR packages with yay..."
+    yay -Syuu --noconfirm
     yay -S --needed --noconfirm \
-        gowall waybar visual-studio-code-bin grpcurl google-chrome hyprpaper hyprpicker ttf-victor-mono \
-        hyprshot hyprlock hypridle nwg-look ncspot papirus-icon-theme paru sddm-theme-corners-git
+        speedtest-cli fastfetch nerdfetch unzip gcc hyprland kitty yazi zsh \
+        base-devel bluez bluez-utils bpytop tree swaync qt5-wayland qt6-wayland \
+        less brightnessctl pavucontrol pacman-contrib awww udiskie matugen-bin \
+        xdg-desktop-portal-hyprland xdg-desktop-portal-gtk obs-studio noto-fonts noto-fonts-cjk \
+        ttf-cascadia-code ttf-cascadia-code-nerd ttf-font-awesome noto-fonts-emoji \
+        ttf-jetbrains-mono-nerd ttf-iosevka-nerd ttf-victor-mono rofi-wayland waybar \
+	    hyprshot hyprlock hypridle nwg-look google-chrome polkit-gnome gnome-keyring kvantum ttf-meslo-nerd \
+	    power-profiles-daemon claude-desktop wlogout ttf-geist-mono papirus-icon-theme papirus-folders \
+	    linear-desktop-bin github-cli flutter-bin android-studio insomnia-bin
 }
 
 install_oh_my_zsh() {
@@ -157,61 +153,18 @@ configure_bluetooth_fastconnectable() {
     fi
 }
 
-configure_sddm_theme() {
-    log info "Configuring SDDM with Corners theme..."
-    
-    # Create SDDM themes directory if it doesn't exist
-    sudo mkdir -p /usr/share/sddm/themes/corners/
-    
-    # Copy the theme configuration file
-    if [ -f "./sddm/theme.conf" ]; then
-        sudo cp "./sddm/theme.conf" "/usr/share/sddm/themes/corners/theme.conf"
-        log info "SDDM theme configuration copied to /usr/share/sddm/themes/corners/theme.conf"
-    else
-        log error "theme.conf not found in ./sddm directory"
-        return 1
-    fi
-
-    # Create or ensure SDDM config directory exists
-    sudo mkdir -p /usr/lib/sddm/sddm.conf.d/
-    CONFIG_FILE="/usr/lib/sddm/sddm.conf.d/default.conf"
-
-    # Create the file if it doesn't exist
-    if [ ! -f "$CONFIG_FILE" ]; then
-        echo -e "[Theme]\nCurrent=corners" | sudo tee "$CONFIG_FILE" > /dev/null
-    else
-        # Check if [Theme] section exists
-        if grep -q "^\[Theme\]" "$CONFIG_FILE"; then
-            # If section exists, update or append the Current setting
-            if grep -q "^\[Theme\]" "$CONFIG_FILE" && grep -A 5 "^\[Theme\]" "$CONFIG_FILE" | grep -q "^Current="; then
-                # Replace existing Current line under [Theme]
-                sudo sed -i '/^\[Theme\]/,/^\[.*\]/ s/^Current=.*/Current=corners/' "$CONFIG_FILE"
-            else
-                # Add Current=corners under existing [Theme] section
-                sudo sed -i '/^\[Theme\]/a Current=corners' "$CONFIG_FILE"
-            fi
-        else
-            # Add new [Theme] section at the end
-            echo -e "\n[Theme]\nCurrent=corners" | sudo tee -a "$CONFIG_FILE" > /dev/null
-        fi
-    fi
-
-    log info "SDDM theme configured to use Corners theme"
-}
-
 setup_hyprland_config() {
-    log info "Setting up hyrpland.conf file..."
+    log info "Setting up hyprland config..."
     
-    # Create Hyprland config directory if it doesn't exist
-    mkdir -p "$HOME/.config/hypr"
-    
-    # Copy the configuration file from .config directory
-    if [ -f "./.config/hypr/hyprland.conf" ]; then
-        cp "./.config/hypr/hyprland.conf" "$HOME/.config/hypr/hyprland.conf"
-        log info "Hyprland configuration copied to $HOME/.config/hypr/hyprland.conf"
-    else
-        log error "hyprland.conf not found in ./.config directory"
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$HOME/.config/hypr" ]; then
+        mkdir -p "$HOME/.config/hypr"
+        log info "Created directory: $HOME/.config/hypr"
     fi
+    
+    # Copy the .config/hypr directory from this repo
+    cp -r "./.config/hypr"/* "$HOME/.config/hypr/"
+    log info "Hyprland configuration copied to $HOME/.config/hypr"
 }
 
 # --------------------------------------
@@ -380,7 +333,6 @@ EOF
 main() {
     check_not_root
     create_user_dirs
-    install_pacman_packages
     add_user_to_docker_group
     install_yay
     install_yay_packages

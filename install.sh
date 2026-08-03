@@ -49,7 +49,7 @@ install_yay() {
     if ! command -v yay &>/dev/null; then
         log info "Installing yay AUR helper..."
         temp_dir=$(mktemp -d)
-        git clone https://aur.archlinux.org/yay-bin.git "$temp_dir/yay"
+        git clone https://aur.archlinux.org/yay.git "$temp_dir/yay"
         (cd "$temp_dir/yay" && makepkg -si --noconfirm)
         rm -rf "$temp_dir"
         log info "yay installed successfully."

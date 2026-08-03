@@ -40,20 +40,16 @@ add_user_to_docker_group() {
     sudo usermod -aG docker "$USER"
 }
 
-enable_services() {
-    log info "Enabling and starting services..."
-    for service in docker.service docker.socket containerd.service bluetooth.service sddm.service; do
-        sudo systemctl enable "$service"
-        sudo systemctl start "$service"
-        log info "Service enabled: $service"
-    done
+enable_docker_service() {
+    log info "Enabling and starting docker service..."
+    sudo systemctl enable --now docker.service
 }
 
 install_yay() {
     if ! command -v yay &>/dev/null; then
         log info "Installing yay AUR helper..."
         temp_dir=$(mktemp -d)
-        git clone https://aur.archlinux.org/yay.git "$temp_dir/yay"
+        git clone https://aur.archlinux.org/yay-bin.git "$temp_dir/yay"
         (cd "$temp_dir/yay" && makepkg -si --noconfirm)
         rm -rf "$temp_dir"
         log info "yay installed successfully."
@@ -171,122 +167,88 @@ setup_hyprland_config() {
 # Theme setup
 # --------------------------------------
 setup_waybar_theme() {
-    log info "Setting up custom Waybar configuration..."
-
-    local waybar_config="$HOME/.config/waybar"
-    local source_config="./.config/waybar"
-
-    # Check if source directory exists
-    if [ ! -d "$source_config" ]; then
-        log error "Source directory $source_config does not exist"
-        return 1
+    log info "Setting up waybar config..."
+    
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$HOME/.config/waybar" ]; then
+        mkdir -p "$HOME/.config/waybar"
+        log info "Created directory: $HOME/.config/waybar"
     fi
-
-    # Create destination directory if it doesn't exist
-    mkdir -p "$waybar_config"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$waybar_config/"
-    log info "Copied all Waybar configuration files to $waybar_config"
+    
+    # Copy the .config/waybar directory from this repo
+    cp -r "./.config/waybar"/* "$HOME/.config/waybar/"
+    log info "Waybar configuration copied to $HOME/.config/waybar"
 }
 
 setup_kitty_config() {
-    log info "Setting up Kitty configuration..."
-
-    local kitty_config="$HOME/.config/kitty"
-    local source_config="./.config/kitty"
-
-    # Check if source directory exists
-    if [ ! -d "$source_config" ]; then
-        log error "Source directory $source_config does not exist"
-        return 1
+    log info "Setting up kitty config..."
+    
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$HOME/.config/kitty" ]; then
+        mkdir -p "$HOME/.config/kitty"
+        log info "Created directory: $HOME/.config/kitty"
     fi
-
-    # Create destination directory if it doesn't exist
-    mkdir -p "$kitty_config"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$kitty_config/"
-    log info "Copied all Kitty configuration files to $kitty_config"
+    
+    # Copy the .config/kitty directory from this repo
+    cp -r "./.config/kitty"/* "$HOME/.config/kitty/"
+    log info "Kitty configuration copied to $HOME/.config/kitty"
 }
 
 setup_gtk3_theme() {
-    log info "Setting up custom GTK3 configuration..."
-
-    local gtk_config="$HOME/.config/gtk-3.0"
-    local source_config="./.config/gtk-3.0"
-
-    # Check if source directory exists
-    if [ ! -d "$source_config" ]; then
-        log error "Source directory $source_config does not exist"
-        return 1
+    log info "Setting up gtk3 config..."
+    
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$HOME/.config/gtk-3.0" ]; then
+        mkdir -p "$HOME/.config/gtk-3.0"
+        log info "Created directory: $HOME/.config/gtk-3.0"
     fi
-
-    # Create destination directory if it doesn't exist
-    mkdir -p "$gtk_config"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$gtk_config/"
-    log info "Copied all GTK3 configuration files to $gtk_config"
+    
+    # Copy the .config/gtk-3.0 directory from this repo
+    cp -r "./.config/gtk-3.0"/* "$HOME/.config/gtk-3.0/"
+    log info "GTK-3 configuration copied to $HOME/.config/gtk-3.0"
 }
 
 setup_gtk4_theme() {
-    log info "Setting up custom GTK4 configuration..."
-
-    local gtk_config="$HOME/.config/gtk-4.0"
-    local source_config="./.config/gtk-4.0"
-
-    # Check if source directory exists
-    if [ ! -d "$source_config" ]; then
-        log error "Source directory $source_config does not exist"
-        return 1
+    log info "Setting up gtk4 config..."
+    
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$HOME/.config/gtk-4.0" ]; then
+        mkdir -p "$HOME/.config/gtk-4.0"
+        log info "Created directory: $HOME/.config/gtk-4.0"
     fi
-
-    # Create destination directory if it doesn't exist
-    mkdir -p "$gtk_config"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$gtk_config/"
-    log info "Copied all GTK4 configuration files to $gtk_config"
+    
+    # Copy the .config/gtk-4.0 directory from this repo
+    cp -r "./.config/gtk-4.0"/* "$HOME/.config/gtk-4.0/"
+    log info "GTK-4 configuration copied to $HOME/.config/gtk-4.0"
 }
 
 setup_rofi_theme() {
-    log info "Setting up custom Rofi configuration..."
-
-    local rofi_config="$HOME/.config/rofi"
-    local source_config="./.config/rofi"
-
-    # Check if source directory exists
-    if [ ! -d "$source_config" ]; then
-        log error "Source directory $source_config does not exist"
-        return 1
+    log info "Setting up rofi config..."
+    
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$HOME/.config/rofi" ]; then
+        mkdir -p "$HOME/.config/rofi"
+        log info "Created directory: $HOME/.config/rofi"
     fi
-
-    # Create destination directory if it doesn't exist
-    mkdir -p "$rofi_config"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$rofi_config/"
-    log info "Copied all Rofi configuration files to $rofi_config"
+    
+    # Copy the .config/rofi directory from this repo
+    cp -r "./.config/rofi"/* "$HOME/.config/rofi/"
+    log info "Rofi configuration copied to $HOME/.config/rofi"
 }
 
 setup_matugen_config() {
     log info "Setting up matugen configuration..."
+	local matugen_config="$HOME/.config/matugen"
 
-    local matugen_config="$HOME/.config/matugen"
-    local source_config="./.config/matugen"
-
-    # Check if source directory exists
-    if [ ! -d "$source_config" ]; then
-        log error "Source directory $source_config does not exist"
-        return 1
+    # Check if destination directory exists, if not create it
+    if [ ! -d "$matugen_config" ]; then
+        mkdir -p "$matugen_config"
+        log info "Created directory: $matugen_config"
     fi
-
-    # Create destination directory if it doesn't exist
-    mkdir -p "$matugen_config"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$matugen_config/"
+    
+	# Copy the .config/matugen directory from this repo
+    cp -r "./.config/matugen"/* "$matugen_config"
+    log info "Matugen configuration copied to $matugen_config"
 
     # Make post-hook scripts executable
     chmod +x "$matugen_config"/post-hook-scripts/*.sh 2>/dev/null || true
@@ -338,7 +300,7 @@ main() {
     setup_matugen_config
     setup_wlogout_config
     log info "Setup complete!, now enabling services and starting them..."
-    enable_services
+    enable_docker_service
 }
 
 main

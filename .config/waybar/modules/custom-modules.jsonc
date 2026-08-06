@@ -1,5 +1,5 @@
 {
-"custom/media": {
+  "custom/media": {
     "format": "{}",
     "escape": true,
     "return-type": "json",
@@ -10,13 +10,13 @@
     "on-scroll-up": "playerctl next",
     "on-scroll-down": "playerctl previous",
     "exec": "$HOME/.config/waybar/scripts/mediaplayer.py 2> /dev/null" // Script in resources/custom_modules folder
-},
-"custom/launcher": {
-		"format": "󰣇",
-		"on-click": "rofi -show drun -theme ~/.config/rofi/theme.rasi",
-		"tooltip": false
-},
-"custom/notification": {
+  },
+  "custom/launcher": {
+    "format": "󰣇",
+    "on-click": "rofi -show drun -theme ~/.config/rofi/theme.rasi",
+    "tooltip": false
+  },
+  "custom/notification": {
     "tooltip": true,
     "format": "{icon}",
     "format-icons": {
@@ -36,7 +36,7 @@
     "on-click-right": "swaync-client -d -sw",
     "escape": true
   },
-"custom/bluetooth": {
+  "custom/bluetooth": {
     "exec": "~/.config/waybar/scripts/fetch_bluetooth_devices.sh",
     "interval": 3,
     "on-click": "kitty -e bluetoothctl",

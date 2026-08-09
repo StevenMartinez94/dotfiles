@@ -8,8 +8,13 @@ ZSH_THEME="robbyrussell"
 # Standard plugins can be found in $ZSH/plugins/
 plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
 
-# Fix colorscheme for kitty terminal during SSH sessions
+# Fix colorscheme for kitty terminal during SSH sessions and fix clear command
 export TERM=xterm-256color
 
 # Enable ZSH
 source $ZSH/oh-my-zsh.sh
+
+# Aliases
+alias code='code --password-store=gnome-libsecret'
+export PATH=~/.npm-global/bin:$PATH
+export TERM=xterm-256color

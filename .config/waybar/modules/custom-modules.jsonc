@@ -1,0 +1,52 @@
+{
+  "custom/media": {
+    "format": "{}",
+    "escape": true,
+    "return-type": "json",
+    "max-length": 40,
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl stop",
+    "smooth-scrolling-threshold": 10, // This value was tested using a trackpad, it should be lowered if using a mouse.
+    "on-scroll-up": "playerctl next",
+    "on-scroll-down": "playerctl previous",
+    "exec": "$HOME/.config/waybar/scripts/mediaplayer.py 2> /dev/null" // Script in resources/custom_modules folder
+  },
+  "custom/launcher": {
+    "format": "󰣇",
+    "on-click": "rofi -show drun -theme ~/.config/rofi/theme.rasi",
+    "tooltip": false
+  },
+  "custom/notification": {
+    "tooltip": true,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "󱅫",
+      "none": "󰂜",
+      "dnd-notification": "󰂠",
+      "dnd-none": "󰪓",
+      "inhibited-notification": "󰂛",
+      "inhibited-none": "󰪑",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰪑"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+  "custom/bluetooth": {
+    "exec": "~/.config/waybar/scripts/fetch_bluetooth_devices.sh",
+    "interval": 3,
+    "on-click": "kitty -e bluetoothctl",
+    "format": "{}",
+    "tooltip": false
+  },
+  "custom/mic": {
+    "exec": "wpctl get-volume @DEFAULT_SOURCE@ | grep -q MUTED && echo '\udb80\udf6d' || echo '\udb80\udf6c'",
+    "interval": 1,
+    "on-click": "wpctl set-mute @DEFAULT_SOURCE@ toggle",
+    "tooltip": false
+  }
+}

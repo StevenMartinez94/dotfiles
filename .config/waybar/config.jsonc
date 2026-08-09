@@ -1,0 +1,29 @@
+{
+    "include": [
+        "~/.config/waybar/modules/modules.jsonc",
+        "~/.config/waybar/modules/custom-modules.jsonc"
+    ],
+    "layer": "top",
+    "margin-top": 13,
+    "modules-left": [
+        "custom/launcher",
+        "hyprland/workspaces",
+        "custom/bluetooth",
+        "custom/mic"
+    ],
+    "modules-center": [
+        "custom/notification",
+        "custom/media"
+    ],
+    "modules-right": [
+        "clock",
+        "pulseaudio",
+        "network",
+        "cpu",
+        "memory",
+        "backlight",
+        "battery",
+        "power-profiles-daemon",
+        "tray"
+    ]
+}

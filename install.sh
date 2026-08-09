@@ -35,37 +35,22 @@ create_user_dirs() {
     done
 }
 
-install_pacman_packages() {
-    log info "Updating system and installing pacman packages..."
-    sudo pacman -Syu --noconfirm
-    sudo pacman -S --needed --noconfirm \
-        speedtest-cli jq fastfetch unzip neovim git gcc hyprland kitty ranger wget zsh \
-        base-devel bluez bluez-utils bpytop tree docker docker-compose python-pip pyenv \
-        less websocat nodejs npm brightnessctl pavucontrol openssh sddm pacman-contrib \
-        xdg-desktop-portal-hyprland xdg-desktop-portal-gtk obs-studio noto-fonts noto-fonts-cjk \
-        ttf-cascadia-code ttf-cascadia-code-nerd ttf-font-awesome noto-fonts-emoji \
-        ttf-jetbrains-mono-nerd ttf-iosevka-nerd rofi-wayland
-}
-
 add_user_to_docker_group() {
     log info "Adding user to docker group..."
     sudo usermod -aG docker "$USER"
 }
 
-enable_services() {
-    log info "Enabling and starting services..."
-    for service in docker.service docker.socket containerd.service bluetooth.service sddm.service; do
-        sudo systemctl enable "$service"
-        sudo systemctl start "$service"
-        log info "Service enabled: $service"
-    done
+enable_docker_service() {
+    log info "Enabling and starting docker service..."
+    sudo systemctl enable --now docker.service
 }
 
 install_yay() {
     if ! command -v yay &>/dev/null; then
         log info "Installing yay AUR helper..."
         temp_dir=$(mktemp -d)
-        git clone https://aur.archlinux.org/yay.git "$temp_dir/yay"
+        sudo pacman -S --needed git base-devel
+        git clone https://aur.archlinux.org/yay-bin.git "$temp_dir/yay"
         (cd "$temp_dir/yay" && makepkg -si --noconfirm)
         rm -rf "$temp_dir"
         log info "yay installed successfully."
@@ -76,9 +61,17 @@ install_yay() {
 
 install_yay_packages() {
     log info "Installing AUR packages with yay..."
+    yay -Syuu --noconfirm
     yay -S --needed --noconfirm \
-        gowall waybar visual-studio-code-bin grpcurl google-chrome hyprpaper hyprpicker ttf-victor-mono \
-        hyprshot hyprlock hypridle nwg-look ncspot papirus-icon-theme paru sddm-theme-corners-git
+        speedtest-cli fastfetch nerdfetch unzip gcc hyprland kitty yazi zsh \
+        bluez bluez-utils bpytop tree swaync qt5-wayland qt6-wayland \
+        less brightnessctl pavucontrol pacman-contrib awww udiskie matugen-bin \
+        xdg-desktop-portal-hyprland xdg-desktop-portal-gtk obs-studio noto-fonts noto-fonts-cjk \
+        ttf-cascadia-code ttf-cascadia-code-nerd ttf-font-awesome noto-fonts-emoji otf-departure-mono-nerd \
+        ttf-jetbrains-mono-nerd ttf-iosevka-nerd ttf-victor-mono rofi-wayland waybar \
+	    hyprshot hyprlock hypridle nwg-look google-chrome polkit-gnome gnome-keyring kvantum ttf-meslo-nerd \
+	    power-profiles-daemon claude-desktop wlogout ttf-geist-mono papirus-icon-theme papirus-folders \
+	    github-cli flutter-bin android-studio insomnia-bin
 }
 
 install_oh_my_zsh() {
@@ -157,221 +150,26 @@ configure_bluetooth_fastconnectable() {
     fi
 }
 
-configure_sddm_theme() {
-    log info "Configuring SDDM with Corners theme..."
-    
-    # Create SDDM themes directory if it doesn't exist
-    sudo mkdir -p /usr/share/sddm/themes/corners/
-    
-    # Copy the theme configuration file
-    if [ -f "./sddm/theme.conf" ]; then
-        sudo cp "./sddm/theme.conf" "/usr/share/sddm/themes/corners/theme.conf"
-        log info "SDDM theme configuration copied to /usr/share/sddm/themes/corners/theme.conf"
-    else
-        log error "theme.conf not found in ./sddm directory"
-        return 1
-    fi
+setup_config() {
+    local name="$1"
+    local source_config="./.config/$name"
+    local destination_config="$HOME/.config/$name"
 
-    # Create or ensure SDDM config directory exists
-    sudo mkdir -p /usr/lib/sddm/sddm.conf.d/
-    CONFIG_FILE="/usr/lib/sddm/sddm.conf.d/default.conf"
+    log info "Setting up $name configuration..."
 
-    # Create the file if it doesn't exist
-    if [ ! -f "$CONFIG_FILE" ]; then
-        echo -e "[Theme]\nCurrent=corners" | sudo tee "$CONFIG_FILE" > /dev/null
-    else
-        # Check if [Theme] section exists
-        if grep -q "^\[Theme\]" "$CONFIG_FILE"; then
-            # If section exists, update or append the Current setting
-            if grep -q "^\[Theme\]" "$CONFIG_FILE" && grep -A 5 "^\[Theme\]" "$CONFIG_FILE" | grep -q "^Current="; then
-                # Replace existing Current line under [Theme]
-                sudo sed -i '/^\[Theme\]/,/^\[.*\]/ s/^Current=.*/Current=corners/' "$CONFIG_FILE"
-            else
-                # Add Current=corners under existing [Theme] section
-                sudo sed -i '/^\[Theme\]/a Current=corners' "$CONFIG_FILE"
-            fi
-        else
-            # Add new [Theme] section at the end
-            echo -e "\n[Theme]\nCurrent=corners" | sudo tee -a "$CONFIG_FILE" > /dev/null
-        fi
-    fi
-
-    log info "SDDM theme configured to use Corners theme"
-}
-
-setup_hyprland_config() {
-    log info "Setting up hyrpland.conf file..."
-    
-    # Create Hyprland config directory if it doesn't exist
-    mkdir -p "$HOME/.config/hypr"
-    
-    # Copy the configuration file from .config directory
-    if [ -f "./.config/hypr/hyprland.conf" ]; then
-        cp "./.config/hypr/hyprland.conf" "$HOME/.config/hypr/hyprland.conf"
-        log info "Hyprland configuration copied to $HOME/.config/hypr/hyprland.conf"
-    else
-        log error "hyprland.conf not found in ./.config directory"
-    fi
-}
-
-# --------------------------------------
-# Theme setup
-# --------------------------------------
-setup_waybar_theme() {
-    log info "Setting up custom Waybar configuration..."
-
-    local waybar_config="$HOME/.config/waybar"
-    local source_config="./.config/waybar"
-
-    # Check if source directory exists
     if [ ! -d "$source_config" ]; then
         log error "Source directory $source_config does not exist"
         return 1
     fi
 
-    # Create destination directory if it doesn't exist
-    mkdir -p "$waybar_config"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$waybar_config/"
-    log info "Copied all Waybar configuration files to $waybar_config"
+    mkdir -p "$destination_config"
+    cp -r "$source_config"/. "$destination_config/"
+    log info "$name configuration copied to $destination_config"
 }
 
-setup_ranger_theme() {
-    log info "Setting up custom Ranger configuration..."
-
-    local ranger_config="$HOME/.config/ranger"
-    local source_config="./.config/ranger"
-    local theme_url="https://raw.githubusercontent.com/dracula/ranger/master/dracula.py"
-    local theme_dest="$ranger_config/colorschemes/dracula.py"
-
-    # Check if source directory exists
-    if [ ! -d "$source_config" ]; then
-        log error "Source directory $source_config does not exist"
-        return 1
-    fi
-
-    # Create destination directory if it doesn't exist
-    mkdir -p "$ranger_config"
-
-    # Create colorschemes directory if it doesn't exist
-    mkdir -p "$ranger_config/colorschemes"
-    log info "Ensured colorschemes directory exists"
-
-    # Download Dracula theme file
-    curl -fsSL "$theme_url" -o "$theme_dest"
-    log info "Downloaded Dracula theme to $theme_dest"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$ranger_config/"
-    log info "Copied all Ranger configuration files to $ranger_config"
-}
-
-setup_kitty_theme() {
-    log info "Setting up Catppuccin Mocha theme for Kitty..."
-
-    local kitty_config="$HOME/.config/kitty"
-    local theme_url="https://raw.githubusercontent.com/catppuccin/kitty/main/themes/mocha.conf"
-    local theme_file="$kitty_config/mocha.conf"
-    local main_conf="$kitty_config/kitty.conf"
-
-    mkdir -p "$kitty_config"
-    curl -fsSL "$theme_url" -o "$theme_file"
-    log info "Downloaded Mocha theme for Kitty."
-
-    # Ensure main kitty.conf includes the theme and sets the font
-    if ! grep -q "include mocha.conf" "$main_conf" 2>/dev/null; then
-        echo "include mocha.conf" >> "$main_conf"
-        log info "Appended theme include to kitty.conf"
-    else
-        log warn "kitty.conf already includes mocha.conf"
-    fi
-
-    if ! grep -qi "^font_family" "$main_conf" 2>/dev/null; then
-        echo "font_family Cascadia Code" >> "$main_conf"
-        log info "Set font to Cascadia Code in kitty.conf"
-    else
-        log warn "kitty.conf already defines a font_family"
-    fi
-}
-
-setup_gtk3_theme() {
-    log info "Setting up custom GTK3 configuration..."
-
-    local gtk_config="$HOME/.config/gtk-3.0"
-    local source_config="./.config/gtk-3.0"
-
-    # Check if source directory exists
-    if [ ! -d "$source_config" ]; then
-        log error "Source directory $source_config does not exist"
-        return 1
-    fi
-
-    # Create destination directory if it doesn't exist
-    mkdir -p "$gtk_config"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$gtk_config/"
-    log info "Copied all GTK3 configuration files to $gtk_config"
-}
-
-setup_rofi_theme() {
-    log info "Setting up custom Rofi configuration..."
-
-    local rofi_config="$HOME/.config/rofi"
-    local source_config="./.config/rofi"
-
-    # Check if source directory exists
-    if [ ! -d "$source_config" ]; then
-        log error "Source directory $source_config does not exist"
-        return 1
-    fi
-
-    # Create destination directory if it doesn't exist
-    mkdir -p "$rofi_config"
-
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$rofi_config/"
-    log info "Copied all Rofi configuration files to $rofi_config"
-}
-
-setup_nvim_theme() {
-    log info "Installing Catppuccin Mocha theme for Neovim..."
-
-    local nvim_config="$HOME/.config/nvim"
-    local theme_repo="https://github.com/catppuccin/nvim.git"
-    local theme_temp="$(mktemp -d)"
-    local theme_dest="$nvim_config/pack/plugins/start/catppuccin.nvim"
-
-    mkdir -p "$nvim_config/pack/plugins/start"
-    git clone --depth=1 "$theme_repo" "$theme_temp"
-    mv "$theme_temp" "$theme_dest"
-    log info "Cloned catppuccin.nvim into $theme_dest"
-
-    # Add Catppuccin theme setup to init.lua
-    local init_file="$nvim_config/init.lua"
-    if [ ! -f "$init_file" ]; then
-        touch "$init_file"
-    fi
-
-    if ! grep -q 'catppuccin' "$init_file"; then
-        cat >> "$init_file" <<EOF
-
--- Catppuccin Mocha (Lavender) theme setup
-vim.cmd.colorscheme "catppuccin"
-require("catppuccin").setup {
-    flavour = "mocha",
-    integrations = {
-        nvimtree = true,
-        treesitter = true,
-        telescope = true,
-    }
-}
-EOF
-        log info "Appended Catppuccin setup to init.lua"
-    else
-        log warn "init.lua already contains Catppuccin configuration"
-    fi
+setup_matugen_config() {
+    setup_config matugen
+    chmod +x "$HOME/.config/matugen"/post-hook-scripts/*.sh 2>/dev/null || true
 }
 
 # --------------------------------------
@@ -380,8 +178,6 @@ EOF
 main() {
     check_not_root
     create_user_dirs
-    install_pacman_packages
-    add_user_to_docker_group
     install_yay
     install_yay_packages
     install_oh_my_zsh
@@ -390,16 +186,17 @@ main() {
     cleanup_shell_files
     sync_time
     configure_bluetooth_fastconnectable
-    configure_sddm_theme
-    setup_hyprland_config
-    setup_waybar_theme
-    setup_ranger_theme
-    setup_kitty_theme
-    setup_gtk3_theme
-    setup_rofi_theme
-    setup_nvim_theme
+    setup_config hypr
+    setup_config waybar
+    setup_config kitty
+    setup_config gtk-3.0
+    setup_config gtk-4.0
+    setup_config rofi
+    setup_matugen_config
+    setup_config wlogout
     log info "Setup complete!, now enabling services and starting them..."
-    enable_services
+    enable_docker_service
+    add_user_to_docker_group
 }
 
 main

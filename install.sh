@@ -71,7 +71,7 @@ install_yay_packages() {
         ttf-jetbrains-mono-nerd ttf-iosevka-nerd ttf-victor-mono rofi-wayland waybar \
 	    hyprshot hyprlock hypridle nwg-look google-chrome polkit-gnome gnome-keyring kvantum ttf-meslo-nerd \
 	    power-profiles-daemon claude-desktop wlogout ttf-geist-mono papirus-icon-theme papirus-folders \
-	    linear-desktop-bin github-cli flutter-bin android-studio insomnia-bin
+	    github-cli flutter-bin android-studio insomnia-bin
 }
 
 install_oh_my_zsh() {
@@ -150,131 +150,26 @@ configure_bluetooth_fastconnectable() {
     fi
 }
 
-setup_hyprland_config() {
-    log info "Setting up hyprland config..."
-    
-    # Check if destination directory exists, if not create it
-    if [ ! -d "$HOME/.config/hypr" ]; then
-        mkdir -p "$HOME/.config/hypr"
-        log info "Created directory: $HOME/.config/hypr"
-    fi
-    
-    # Copy the .config/hypr directory from this repo
-    cp -r "./.config/hypr"/* "$HOME/.config/hypr/"
-    log info "Hyprland configuration copied to $HOME/.config/hypr"
-}
+setup_config() {
+    local name="$1"
+    local source_config="./.config/$name"
+    local destination_config="$HOME/.config/$name"
 
-# --------------------------------------
-# Theme setup
-# --------------------------------------
-setup_waybar_theme() {
-    log info "Setting up waybar config..."
-    
-    # Check if destination directory exists, if not create it
-    if [ ! -d "$HOME/.config/waybar" ]; then
-        mkdir -p "$HOME/.config/waybar"
-        log info "Created directory: $HOME/.config/waybar"
-    fi
-    
-    # Copy the .config/waybar directory from this repo
-    cp -r "./.config/waybar"/* "$HOME/.config/waybar/"
-    log info "Waybar configuration copied to $HOME/.config/waybar"
-}
+    log info "Setting up $name configuration..."
 
-setup_kitty_config() {
-    log info "Setting up kitty config..."
-    
-    # Check if destination directory exists, if not create it
-    if [ ! -d "$HOME/.config/kitty" ]; then
-        mkdir -p "$HOME/.config/kitty"
-        log info "Created directory: $HOME/.config/kitty"
-    fi
-    
-    # Copy the .config/kitty directory from this repo
-    cp -r "./.config/kitty"/* "$HOME/.config/kitty/"
-    log info "Kitty configuration copied to $HOME/.config/kitty"
-}
-
-setup_gtk3_theme() {
-    log info "Setting up gtk3 config..."
-    
-    # Check if destination directory exists, if not create it
-    if [ ! -d "$HOME/.config/gtk-3.0" ]; then
-        mkdir -p "$HOME/.config/gtk-3.0"
-        log info "Created directory: $HOME/.config/gtk-3.0"
-    fi
-    
-    # Copy the .config/gtk-3.0 directory from this repo
-    cp -r "./.config/gtk-3.0"/* "$HOME/.config/gtk-3.0/"
-    log info "GTK-3 configuration copied to $HOME/.config/gtk-3.0"
-}
-
-setup_gtk4_theme() {
-    log info "Setting up gtk4 config..."
-    
-    # Check if destination directory exists, if not create it
-    if [ ! -d "$HOME/.config/gtk-4.0" ]; then
-        mkdir -p "$HOME/.config/gtk-4.0"
-        log info "Created directory: $HOME/.config/gtk-4.0"
-    fi
-    
-    # Copy the .config/gtk-4.0 directory from this repo
-    cp -r "./.config/gtk-4.0"/* "$HOME/.config/gtk-4.0/"
-    log info "GTK-4 configuration copied to $HOME/.config/gtk-4.0"
-}
-
-setup_rofi_theme() {
-    log info "Setting up rofi config..."
-    
-    # Check if destination directory exists, if not create it
-    if [ ! -d "$HOME/.config/rofi" ]; then
-        mkdir -p "$HOME/.config/rofi"
-        log info "Created directory: $HOME/.config/rofi"
-    fi
-    
-    # Copy the .config/rofi directory from this repo
-    cp -r "./.config/rofi"/* "$HOME/.config/rofi/"
-    log info "Rofi configuration copied to $HOME/.config/rofi"
-}
-
-setup_matugen_config() {
-    log info "Setting up matugen configuration..."
-	local matugen_config="$HOME/.config/matugen"
-
-    # Check if destination directory exists, if not create it
-    if [ ! -d "$matugen_config" ]; then
-        mkdir -p "$matugen_config"
-        log info "Created directory: $matugen_config"
-    fi
-    
-	# Copy the .config/matugen directory from this repo
-    cp -r "./.config/matugen"/* "$matugen_config"
-    log info "Matugen configuration copied to $matugen_config"
-
-    # Make post-hook scripts executable
-    chmod +x "$matugen_config"/post-hook-scripts/*.sh 2>/dev/null || true
-
-    log info "Copied all matugen configuration files to $matugen_config"
-}
-
-setup_wlogout_config() {
-    log info "Setting up wlogout configuration..."
-
-    local wlogout_config="$HOME/.config/wlogout"
-    local source_config="./.config/wlogout"
-
-    # Check if source directory exists
     if [ ! -d "$source_config" ]; then
         log error "Source directory $source_config does not exist"
         return 1
     fi
 
-    # Create destination directory if it doesn't exist
-    mkdir -p "$wlogout_config"
+    mkdir -p "$destination_config"
+    cp -r "$source_config"/. "$destination_config/"
+    log info "$name configuration copied to $destination_config"
+}
 
-    # Copy all files from source to destination
-    cp -r "$source_config"/* "$wlogout_config/"
-    log info "Copied all wlogout configuration files to $wlogout_config"
+setup_matugen_config() {
+    setup_config matugen
+    chmod +x "$HOME/.config/matugen"/post-hook-scripts/*.sh 2>/dev/null || true
 }
 
 # --------------------------------------
@@ -291,14 +186,14 @@ main() {
     cleanup_shell_files
     sync_time
     configure_bluetooth_fastconnectable
-    setup_hyprland_config
-    setup_waybar_theme
-    setup_kitty_config
-    setup_gtk3_theme
-    setup_gtk4_theme
-    setup_rofi_theme
+    setup_config hypr
+    setup_config waybar
+    setup_config kitty
+    setup_config gtk-3.0
+    setup_config gtk-4.0
+    setup_config rofi
     setup_matugen_config
-    setup_wlogout_config
+    setup_config wlogout
     log info "Setup complete!, now enabling services and starting them..."
     enable_docker_service
     add_user_to_docker_group

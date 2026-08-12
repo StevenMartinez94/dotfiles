@@ -61,17 +61,12 @@ tooltip label {
     margin-right: 0;
 }
 
-#tray > .passive,
-#tray > .active,
-#tray > .needs-attention {
-    padding: 0 4px;
-    margin-right: 8px;
+#tray > widget {
+    padding: 0 2px;
 }
 
-#tray > .passive:last-child,
-#tray > .active:last-child,
-#tray > .needs-attention:last-child {
-    margin-right: 0;
+#tray > widget + widget {
+    margin-left: 8px;
 }
 
 #workspaces {

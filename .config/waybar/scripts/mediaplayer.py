@@ -110,6 +110,12 @@ class PlayerManager:
 
     def on_metadata_changed(self, player, metadata, _=None):
         logger.debug(f"Metadata changed for player {player.props.player_name}")
+
+        if player.props.status == "Stopped":
+            logger.debug(f"Player {player.props.player_name} is stopped, clearing output")
+            self.clear_output()
+            return
+
         player_name = player.props.player_name
         artist = player.get_artist()
         artist = artist.replace("&", "&amp;")

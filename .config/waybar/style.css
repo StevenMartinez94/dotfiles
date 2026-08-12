@@ -44,7 +44,8 @@ tooltip label {
 #cpu,
 #memory,
 #backlight,
-#power-profiles-daemon {
+#power-profiles-daemon,
+#tray {
     background-color: #121212;
     margin-right: 10px;
     padding: 0 10px;
@@ -52,8 +53,8 @@ tooltip label {
     color: @primary;
 }
 
-#power-profiles-daemon {
-    margin: 0;
+#tray image {
+    margin: 0 3px;
 }
 
 #workspaces {

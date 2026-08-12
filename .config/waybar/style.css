@@ -53,12 +53,8 @@ tooltip label {
     color: @primary;
 }
 
-#power-profiles-daemon {
-    margin: 0 10px 0 0;
-}
-
-#tray {
-    margin-right: 0;
+#tray image {
+    margin: 0 3px;
 }
 
 #workspaces {

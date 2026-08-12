@@ -65,6 +65,13 @@ tooltip label {
 #tray > .active,
 #tray > .needs-attention {
     padding: 0 4px;
+    margin-right: 4px;
+}
+
+#tray > .passive:last-child,
+#tray > .active:last-child,
+#tray > .needs-attention:last-child {
+    margin-right: 0;
 }
 
 #workspaces {

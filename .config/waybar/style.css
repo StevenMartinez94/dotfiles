@@ -61,19 +61,6 @@ tooltip label {
     margin-right: 0;
 }
 
-#tray > * {
-    padding: 0 2px;
-    margin: 0 4px;
-}
-
-#tray > *:first-child {
-    margin-left: 0;
-}
-
-#tray > *:last-child {
-    margin-right: 0;
-}
-
 #workspaces {
     padding: 8px 5px;
     border-radius: 16px;

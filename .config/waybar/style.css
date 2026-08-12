@@ -65,7 +65,7 @@ tooltip label {
 #tray > .active,
 #tray > .needs-attention {
     padding: 0 4px;
-    margin-right: 4px;
+    margin-right: 8px;
 }
 
 #tray > .passive:last-child,

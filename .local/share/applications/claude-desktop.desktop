@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Claude
+Comment=Claude Desktop
+Exec=/opt/Claude/claude --password-store=gnome-libsecret %U
+Icon=claude-desktop
+Type=Application
+StartupNotify=true
+StartupWMClass=Claude
+Categories=Network;
+MimeType=x-scheme-handler/claude;

@@ -80,6 +80,10 @@ class PlayerManager:
 
     def on_playback_status_changed(self, player, status, _=None):
         logger.debug(f"Playback status changed for player {player.props.player_name}: {status}")
+        if player.props.status == "Stopped":
+            logger.debug(f"Player {player.props.player_name} stopped, clearing output")
+            self.show_most_important_player()
+            return
         self.on_metadata_changed(player, player.props.metadata)
 
     def get_first_playing_player(self):
@@ -113,7 +117,7 @@ class PlayerManager:
 
         if player.props.status == "Stopped":
             logger.debug(f"Player {player.props.player_name} is stopped, clearing output")
-            self.clear_output()
+            self.show_most_important_player()
             return
 
         player_name = player.props.player_name

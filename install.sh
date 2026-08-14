@@ -40,9 +40,23 @@ add_user_to_docker_group() {
     sudo usermod -aG docker "$USER"
 }
 
-enable_docker_service() {
-    log info "Enabling and starting docker service..."
-    sudo systemctl enable --now docker.service
+enable_services() {
+    log info "Enabling and starting system services..."
+
+    # Add more services here later
+    local services=(
+        "docker.service"
+        "bluetooth.service"
+    )
+
+    for service in "${services[@]}"; do
+        if systemctl list-unit-files --type=service --no-pager | grep -q "^${service}[[:space:]]"; then
+            sudo systemctl enable --now "$service"
+            log info "Enabled and started: $service"
+        else
+            log warn "Service not found, skipping: $service"
+        fi
+    done
 }
 
 install_yay() {
@@ -136,20 +150,6 @@ cleanup_shell_files() {
     fi
 }
 
-configure_bluetooth_fastconnectable() {
-    log info "Configuring Bluetooth: setting FastConnectable=true..."
-    local config="/etc/bluetooth/main.conf"
-    
-    sudo sed -i 's/^#*FastConnectable=.*/FastConnectable=true/' "$config"
-
-    if ! grep -q '^FastConnectable=' "$config"; then
-        echo "FastConnectable=true" | sudo tee -a "$config" > /dev/null
-        log info "Added FastConnectable=true to $config"
-    else
-        log info "Updated FastConnectable=true in $config"
-    fi
-}
-
 setup_config() {
     local name="$1"
     local source_config="./.config/$name"
@@ -185,7 +185,6 @@ main() {
     install_zsh_plugins
     cleanup_shell_files
     sync_time
-    configure_bluetooth_fastconnectable
     setup_config hypr
     setup_config waybar
     setup_config kitty
@@ -195,7 +194,7 @@ main() {
     setup_matugen_config
     setup_config wlogout
     log info "Setup complete!, now enabling services and starting them..."
-    enable_docker_service
+    enable_services
     add_user_to_docker_group
 }
 

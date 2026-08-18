@@ -75,16 +75,17 @@ class PlayerManager:
         sys.stdout.flush()
 
     def clear_output(self):
+        logger.debug("Clearing output")
         sys.stdout.write("\n")
         sys.stdout.flush()
 
     def on_playback_status_changed(self, player, status, _=None):
         logger.debug(f"Playback status changed for player {player.props.player_name}: {status}")
-        if player.props.status == "Stopped":
-            logger.debug(f"Player {player.props.player_name} stopped, clearing output")
-            self.show_most_important_player()
-            return
-        self.on_metadata_changed(player, player.props.metadata)
+        # A "Stopped" player is treated as inactive (browsers keep the MPRIS
+        # interface alive with stale metadata after a tab closes, instead of
+        # actually vanishing), so re-evaluate who should be shown rather than
+        # blindly re-printing this player's (possibly stale) metadata.
+        self.show_most_important_player()
 
     def get_first_playing_player(self):
         players = self.get_players()
@@ -95,8 +96,12 @@ class PlayerManager:
             for player in players[::-1]:
                 if player.props.status == "Playing":
                     return player
-            # if none are playing, show the first one
-            return players[0]
+            # if none are playing, show the first one that is paused
+            # (ignore "Stopped" players - they're idle/closed, not just paused)
+            for player in players[::-1]:
+                if player.props.status == "Paused":
+                    return player
+            return None
         else:
             logger.debug("No players found")
             return None
@@ -115,16 +120,25 @@ class PlayerManager:
     def on_metadata_changed(self, player, metadata, _=None):
         logger.debug(f"Metadata changed for player {player.props.player_name}")
 
+        # Ignore metadata pushed by a player that is actually Stopped - this
+        # is exactly the case that used to leave stale "artist - title" text
+        # on screen after closing a browser tab.
         if player.props.status == "Stopped":
-            logger.debug(f"Player {player.props.player_name} is stopped, clearing output")
-            self.show_most_important_player()
+            current_playing = self.get_first_playing_player()
+            if current_playing is None:
+                self.clear_output()
+            elif current_playing.props.player_name == player.props.player_name:
+                # shouldn't normally happen, but stay safe
+                self.clear_output()
+            else:
+                self.on_metadata_changed(current_playing, current_playing.props.metadata)
             return
 
         player_name = player.props.player_name
         artist = player.get_artist()
-        artist = artist.replace("&", "&amp;")
+        artist = artist.replace("&", "&amp;") if artist else artist
         title = player.get_title()
-        title = title.replace("&", "&amp;")
+        title = title.replace("&", "&amp;") if title else title
 
         track_info = ""
         if player_name == "spotify" and "mpris:trackid" in metadata.keys() and ":ad:" in player.props.metadata["mpris:trackid"]:
@@ -136,13 +150,17 @@ class PlayerManager:
 
         if track_info:
             if player.props.status == "Playing":
-                track_info = " " + track_info
+                track_info = " " + track_info
             else:
-                track_info = " " + track_info
+                track_info = " " + track_info
+
         # only print output if no other player is playing
         current_playing = self.get_first_playing_player()
         if current_playing is None or current_playing.props.player_name == player.props.player_name:
-            self.write_output(track_info, player)
+            if track_info:
+                self.write_output(track_info, player)
+            else:
+                self.clear_output()
         else:
             logger.debug(f"Other player {current_playing.props.player_name} is playing, skipping")
 

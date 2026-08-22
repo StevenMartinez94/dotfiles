@@ -16,3 +16,4 @@ source $ZSH/oh-my-zsh.sh
 
 # Aliases
 alias code='code --password-store=gnome-libsecret'
+alias google-chrome='google-chrome-stable'

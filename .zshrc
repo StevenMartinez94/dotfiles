@@ -16,5 +16,3 @@ source $ZSH/oh-my-zsh.sh
 
 # Aliases
 alias code='code --password-store=gnome-libsecret'
-export PATH=~/.npm-global/bin:$PATH
-export TERM=xterm-256color

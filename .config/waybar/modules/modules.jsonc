@@ -73,6 +73,23 @@
       ""
     ]
   },
+  "backlight": {
+    "format": "{percent}% {icon}",
+    "format-icons": [
+      "󰛩",
+      "󱩎",
+      "󱩏",
+      "󱩐",
+      "󱩑",
+      "󱩒",
+      "󱩓",
+      "󱩔",
+      "󱩕",
+      "󱩖",
+      "󰛨"
+    ],
+    "tooltip": false
+  },
   "cpu": {
     "format": " {usage}%",
     "tooltip": false

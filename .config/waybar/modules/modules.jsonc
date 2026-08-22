@@ -8,9 +8,15 @@
   "network": {
     "interface": "wl*",
     "format": "{ifname}",
-    "format-wifi": "{essid} ({signalStrength}%) ",
+    "format-wifi": "{essid} {icon}",
     "format-ethernet": "{ipaddr}/{cidr} ",
     "format-disconnected": "Offline ", //An empty format will hide the module.
+    "format-icons": [
+      "󰤟",
+      "󰤢",
+      "󰤥",
+      "󰤨"
+    ],
     "tooltip": false,
     "max-length": 50
   },

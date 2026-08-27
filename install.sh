@@ -83,9 +83,10 @@ install_yay_packages() {
         xdg-desktop-portal-hyprland xdg-desktop-portal-gtk obs-studio noto-fonts noto-fonts-cjk \
         ttf-cascadia-code ttf-cascadia-code-nerd ttf-font-awesome noto-fonts-emoji otf-departure-mono-nerd \
         ttf-jetbrains-mono-nerd ttf-iosevka-nerd ttf-victor-mono rofi-wayland waybar \
-	    hyprshot hyprlock hypridle nwg-look google-chrome polkit-gnome gnome-keyring kvantum ttf-meslo-nerd \
-	    power-profiles-daemon claude-desktop wlogout ttf-geist-mono papirus-icon-theme papirus-folders \
-	    github-cli flutter-bin android-studio insomnia-bin claude-code github-copilot-cli aws-cli-bin go
+	hyprshot hyprlock hypridle nwg-look google-chrome polkit-gnome gnome-keyring kvantum ttf-meslo-nerd \
+	power-profiles-daemon claude-desktop wlogout ttf-geist-mono papirus-icon-theme papirus-folders \
+	github-cli flutter-bin android-studio insomnia-bin claude-code github-copilot-cli aws-cli-bin go \
+	terraform
 }
 
 install_oh_my_zsh() {

@@ -51,7 +51,7 @@ chmod +x install.sh
 ### AUR Packages
 - yay (AUR helper)
 - gowall
-- waybar-git (supports Hyprland's Lua-based dispatch protocol)
+- waybar
 - rofi (Wayland version)
 - Google Chrome
 - Hyprland-related tools (hyprpaper, hyprpicker, hyprshot, hyprlock, hypridle)

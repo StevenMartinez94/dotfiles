@@ -1,6 +1,7 @@
 {
   "hyprland/workspaces": {
     "format": "{name}",
+    "on-click": "activate",
     "persistent-workspaces": {
       "*": [1, 2, 3, 4, 5] // Show workspaces 1-5 on every monitor
     }

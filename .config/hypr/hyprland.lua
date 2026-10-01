@@ -346,3 +346,30 @@ hl.window_rule({
     move  = "20 monitor_h-120",
     float = true,
 })
+
+hl.window_rule({
+    name = "google-meet-popup",
+    match = {
+        class = "^google-chrome$",
+        title = "^Meet - .+$",
+	float = true,
+    },
+
+    border_size = 0,
+    no_shadow = true,
+    no_blur = true,
+    opacity = "1.0 override"
+})
+
+hl.window_rule({
+    name = "pavucontrol",
+    match = {
+        class = "org.pulseaudio.pavucontrol",
+    },
+
+    border_size = 0,
+    float = true,
+    no_shadow = true,
+    no_blur = true,
+    opacity = "1.0 override"
+})

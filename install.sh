@@ -86,7 +86,7 @@ install_yay_packages() {
 	    hyprshot hyprlock hypridle nwg-look google-chrome polkit-gnome gnome-keyring kvantum ttf-meslo-nerd \
 	    power-profiles-daemon claude-desktop wlogout ttf-geist-mono papirus-icon-theme papirus-folders \
 	    github-cli flutter-bin android-studio insomnia-bin claude-code github-copilot-cli aws-cli-bin go \
-	    terraform nodejs npm 
+	    terraform nodejs npm doctl 
 }
 
 install_oh_my_zsh() {

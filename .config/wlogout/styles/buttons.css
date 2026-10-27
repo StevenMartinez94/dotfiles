@@ -1,0 +1,19 @@
+#lock {
+    background-image: image(url("/home/steven/.config/wlogout/icons/lock.png"));
+}
+
+#logout {
+    background-image: image(url("/home/steven/.config/wlogout/icons/logout.png"));
+}
+
+#suspend {
+    background-image: image(url("/home/steven/.config/wlogout/icons/suspend.png"));
+}
+
+#shutdown {
+    background-image: image(url("/home/steven/.config/wlogout/icons/shutdown.png"));
+}
+
+#reboot {
+    background-image: image(url("/home/steven/.config/wlogout/icons/reboot.png"));
+}

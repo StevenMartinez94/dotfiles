@@ -129,6 +129,12 @@ install_zsh_plugins() {
     log info "Copied custom .zshrc to $HOME/.zshrc"
 }
 
+install_zprofile() {
+    log info "Installing custom .zprofile..."
+    cp "./.zprofile" "$HOME/.zprofile"
+    log info "Copied custom .zprofile to $HOME/.zprofile"
+}
+
 sync_time() {
     log info "Synchronizing system time..."
     sudo timedatectl set-ntp true
@@ -184,6 +190,7 @@ main() {
     install_oh_my_zsh
     change_default_shell
     install_zsh_plugins
+    install_zprofile
     cleanup_shell_files
     sync_time
     setup_config hypr

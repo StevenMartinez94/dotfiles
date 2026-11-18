@@ -51,8 +51,9 @@ enable_services() {
 
     for service in "${services[@]}"; do
         if systemctl list-unit-files --type=service --no-pager | grep -q "^${service}[[:space:]]"; then
-            sudo systemctl enable --now "$service"
-            log info "Enabled and started: $service"
+            sudo systemctl start "$service"
+            sudo systemctl enable "$service"
+            log info "Started and enabled: $service"
         else
             log warn "Service not found, skipping: $service"
         fi

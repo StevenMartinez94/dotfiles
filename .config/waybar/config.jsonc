@@ -21,7 +21,7 @@
         "network",
         "cpu",
         "memory",
-        "backlight",
+        "custom/backlight",
         "battery",
         "power-profiles-daemon",
         "tray"

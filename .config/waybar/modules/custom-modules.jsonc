@@ -48,5 +48,13 @@
     "interval": 1,
     "on-click": "wpctl set-mute @DEFAULT_SOURCE@ toggle",
     "tooltip": false
+  },
+  "custom/backlight": {
+    "exec": "brightnessctl -m | awk -F, '$2 == \"backlight\" { print $4 \" 󰛩\"; exit }'",
+    "exec-if": "find /sys/class/backlight -mindepth 1 -maxdepth 1 -type d -print -quit | grep -q .",
+    "interval": 2,
+    "on-scroll-up": "brightnessctl set 5%+",
+    "on-scroll-down": "brightnessctl set 5%-",
+    "tooltip": false
   }
 }

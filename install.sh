@@ -80,7 +80,7 @@ install_yay_packages() {
     yay -S --needed --noconfirm \
         speedtest-cli fastfetch nerdfetch unzip gcc hyprland kitty yazi zsh \
         bluez bluez-utils bpytop tree swaync qt5-wayland qt6-wayland visual-studio-code-bin linear-desktop-bin \
-        less brightnessctl pavucontrol pacman-contrib awww udiskie matugen-bin ak820 \
+        less brightnessctl pavucontrol pacman-contrib awww udiskie matugen-bin ak820 python-pip python-pipenv \
         xdg-desktop-portal-hyprland xdg-desktop-portal-gtk obs-studio noto-fonts noto-fonts-cjk \
         ttf-cascadia-code ttf-cascadia-code-nerd ttf-font-awesome noto-fonts-emoji otf-departure-mono-nerd \
         ttf-jetbrains-mono-nerd ttf-iosevka-nerd ttf-victor-mono otf-apple-sf-pro rofi-wayland waybar \
